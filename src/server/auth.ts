@@ -3,7 +3,7 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import Spotify from "next-auth/providers/spotify";
 
 import { env } from "~/env";
 
@@ -34,19 +34,38 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  secret: env.NEXTAUTH_SECRET,
   callbacks: {
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.sub,
-      },
-    }),
+    session: async ({ session, token }) => {
+      return session;
+    },
+    signIn: async ({ user, account, credentials, email, profile }) => {
+      console.log(user, account, credentials, email, profile)
+      if (account?.provider === "spotify") {
+        return true;
+      }
+      return false;
+    },
+    jwt: async ({ token, user, account, profile }) => {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    }
   },
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    Spotify({
+      clientId: env.SPOTIFY_CLIENT_ID,
+      clientSecret: env.SPOTIFY_CLIENT_SECRET,
+      authorization: {
+        params: {
+          code_challenge_method: "S256",
+          client_id: env.SPOTIFY_CLIENT_ID,
+          scope: "user-read-email user-read-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-follow-read user-follow-modify",
+          response_type: "code",
+          redirect_uri: env.SPOTIFY_REDIRECT_URI,
+        },
+      },
     }),
     /**
      * ...add more providers here.
