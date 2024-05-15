@@ -1,5 +1,6 @@
 import {
   getServerSession,
+  User,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
@@ -17,15 +18,28 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      name: string;
+      access_token: string;
+      refresh_token: string;
+      expires_at: number;
+      token_type: string;
+      scope: string;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    // ...other properties
+    // role: UserRole;
+    id: string;
+    name: string;
+    access_token: string;
+    refresh_token: string;
+    expires_at: number;
+    token_type: string;
+    scope: string;
+  }
 }
 
 /**
@@ -37,21 +51,46 @@ export const authOptions: NextAuthOptions = {
   secret: env.NEXTAUTH_SECRET,
   callbacks: {
     session: async ({ session, token }) => {
-      return session;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          name: token.providerAccountId,
+          access_token: token.access_token,
+          refresh_token: token.refresh_token,
+          expires_at: token.expires_at,
+          token_type: token.token_type,
+          scope: token.scope,
+        } as User,
+        expires: session.expires.toString(),
+      };
     },
-    signIn: async ({ user, account, credentials, email, profile }) => {
-      console.log(user, account, credentials, email, profile)
+    signIn: async ({ user, account, profile }) => {
       if (account?.provider === "spotify") {
         return true;
       }
       return false;
     },
-    jwt: async ({ token, user, account, profile }) => {
+    jwt: async ({ token, user, account, profile, session }) => {
       if (user) {
-        token.id = user.id;
+        token.accessToken = account?.access_token;
+        token.refreshToken = account?.refresh_token;
+        token.expiresIn = account?.expires_at;
+        token.tokenType = account?.token_type;
+        token.scope = account?.scope;
+        return {
+          ...account,
+          name: user.name,
+          id: user.id,
+          access_token: account?.access_token,
+          refresh_token: account?.refresh_token,
+          expires_at: account?.expires_at,
+          token_type: account?.token_type,
+          scope: account?.scope,
+        };
       }
       return token;
-    }
+    },
   },
   providers: [
     Spotify({
@@ -61,7 +100,8 @@ export const authOptions: NextAuthOptions = {
         params: {
           code_challenge_method: "S256",
           client_id: env.SPOTIFY_CLIENT_ID,
-          scope: "user-read-email user-read-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-follow-read user-follow-modify",
+          scope:
+            "user-read-email user-read-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-follow-read user-follow-modify",
           response_type: "code",
           redirect_uri: env.SPOTIFY_REDIRECT_URI,
         },

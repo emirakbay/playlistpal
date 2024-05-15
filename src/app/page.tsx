@@ -8,17 +8,50 @@ export default async function HomePage() {
     redirect("/api/auth/signin");
   }
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      spotify app
+  const fetchTopSongs = async () => {
+    const res = await fetch(
+      `https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10`,
       {
-        session && (
-          <div className="flex flex-col gap-1">
-            <h1>Logged in as {session.user.email}</h1>
-            <a href="/api/auth/signout" className="px-2 rounded-md bg-black text-center place-self-center">Sign out</a>
-          </div>
-        )
-      }
-    </main>
+        headers: {
+          Authorization: `Bearer ${session.user.access_token}`,
+        },
+      },
+    );
+    const data = await res.json();
+    return data;
+  };
+
+  const songs = await fetchTopSongs();
+
+  return (
+    <>
+      <div className="flex flex-row items-center justify-center bg-black">
+        <span className="text-white">Spotify App</span>
+      </div>
+      <section className="flex h-[calc(100vh-1.50rem)] flex-col items-center bg-gradient-to-b from-[#3b6d02] to-[#172c15] pt-2 align-top text-white">
+        <div className="flex flex-col items-baseline justify-center">
+          {songs.items.map((song: any) => {
+            return (
+              <div
+                key={song.id}
+                className="flex flex-row items-center justify-center"
+              >
+                <img
+                  src={song.album.images[0].url}
+                  alt={song.album.name}
+                  className="h-20 w-20 rounded-md"
+                />
+                <div className="flex flex-col items-center justify-center">
+                  <span className="self-baseline text-lg">{song.name}</span>
+                  <span className="self-baseline text-sm">
+                    {song.artists[0].name}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </>
   );
 }
