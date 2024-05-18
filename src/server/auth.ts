@@ -72,6 +72,39 @@ export const authOptions: NextAuthOptions = {
       return false;
     },
     jwt: async ({ token, user, account, profile, session }) => {
+      if (token && Number(token.expires_at) * 1000 < Date.now()) {
+        const refreshTokenUrl = "https://accounts.spotify.com/api/token";
+        try {
+          const response = await fetch(refreshTokenUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Basic ${Buffer.from(
+                `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
+              ).toString("base64")}`,
+            },
+            body: new URLSearchParams({
+              grant_type: "refresh_token",
+              refresh_token: token.refresh_token as string,
+            }),
+          });
+          if (!response.ok) {
+            throw token;
+          }
+          const data = await response.json();
+          return {
+            ...token,
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+            expires_at: data.expires_in,
+            token_type: data.token_type,
+            scope: data.scope,
+          };
+        } catch (error) {
+          console.log("Error refreshing access token", error);
+        }
+      }
+
       if (user) {
         token.accessToken = account?.access_token;
         token.refreshToken = account?.refresh_token;
