@@ -1,13 +1,13 @@
-/* eslint-disable */
 import {
   getServerSession,
-  User,
+  type User,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
 import Spotify from "next-auth/providers/spotify";
 
 import { env } from "~/env";
+import { type RefreshTokenResponse } from "~/types/spotify-types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -66,13 +66,13 @@ export const authOptions: NextAuthOptions = {
         expires: session.expires.toString(),
       };
     },
-    signIn: async ({ user, account, profile }) => {
+    signIn: async ({ account }) => {
       if (account?.provider === "spotify") {
         return true;
       }
       return false;
     },
-    jwt: async ({ token, user, account, profile, session }) => {
+    jwt: async ({ token, user, account }) => {
       if (token && Number(token.expires_at) * 1000 < Date.now()) {
         const refreshTokenUrl = "https://accounts.spotify.com/api/token";
         try {
@@ -92,7 +92,7 @@ export const authOptions: NextAuthOptions = {
           if (!response.ok) {
             throw token;
           }
-          const data = await response.json();
+          const data = (await response.json()) as RefreshTokenResponse;
           return {
             ...token,
             access_token: data.access_token,
