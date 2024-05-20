@@ -7,7 +7,8 @@ import {
 import Spotify from "next-auth/providers/spotify";
 
 import { env } from "~/env";
-import { type RefreshTokenResponse } from "~/types/spotify-types";
+import { AccessToken } from "~/types/spotify-types";
+// import { type RefreshTokenResponse } from "~/types/spotify-types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -92,14 +93,14 @@ export const authOptions: NextAuthOptions = {
           if (!response.ok) {
             throw token;
           }
-          const data = (await response.json()) as RefreshTokenResponse;
+          const data = (await response.json()) as AccessToken;
+          console.log("🚀 ~ jwt: ~ data:", data);
           return {
             ...token,
             access_token: data.access_token,
             refresh_token: data.refresh_token,
             expires_at: data.expires_in,
             token_type: data.token_type,
-            scope: data.scope,
           };
         } catch (error) {
           console.log("Error refreshing access token", error);
