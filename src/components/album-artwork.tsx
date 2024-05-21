@@ -4,6 +4,19 @@ import { cn } from "~/lib/utils";
 
 import { ContextMenu, ContextMenuTrigger } from "./ui/context-menu";
 
+type AlbumArtworkProps = {
+  album: {
+    name: string;
+    artist: string | undefined;
+    cover: string | undefined;
+    order: number | undefined;
+  };
+  aspectRatio?: "portrait" | "square";
+  width?: number;
+  height?: number;
+  className?: string;
+};
+
 export function AlbumArtwork({
   album,
   aspectRatio = "portrait",
@@ -11,14 +24,14 @@ export function AlbumArtwork({
   height,
   className,
   ...props
-}: any) {
+}: AlbumArtworkProps) {
   return (
     <div className={cn("space-y-3", className)} {...props}>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
             <Image
-              src={album.cover}
+              src={album.cover!}
               alt={album.name}
               width={width}
               height={height}

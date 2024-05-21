@@ -1,55 +1,50 @@
-import { cn } from "~/lib/utils";
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+
+import { navigationMenuTriggerStyle } from "~/components/ui/navigation-menu";
 import {
-  Menubar,
-  MenubarMenu,
-  MenubarTrigger,
-  MenubarContent,
-  MenubarItem,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubTrigger,
-  MenubarSubContent,
-} from "./ui/menubar";
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "~/components/ui/navigation-menu";
 
 export function Menu() {
   return (
-    <Menubar className="rounded-none border-b border-none px-2 lg:px-6">
-      <MenubarMenu>
-        <MenubarTrigger className="font-bold">PlaylistPal</MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>About PlaylistPal</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger className="relative">Playlist</MenubarTrigger>
-        <MenubarContent>
-          <MenubarSub>
-            <MenubarSubTrigger>New</MenubarSubTrigger>
-            <MenubarSubContent className="w-[230px]">
-              <MenubarItem>
-                Song <MenubarShortcut></MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem>
-                Playlist <MenubarShortcut></MenubarShortcut>
-              </MenubarItem>
-            </MenubarSubContent>
-          </MenubarSub>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>
-          <a href="/account">Account</a>
-        </MenubarTrigger>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger
-          style={{
-            marginLeft: "auto",
-          }}
-        >
-          <a href="/api/auth/signout">Signout</a>
-        </MenubarTrigger>
-      </MenubarMenu>
-    </Menubar>
+    <>
+      <main className="flex flex-row">
+        <NavigationMenu className="px-6">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link href="/" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Home
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/profile" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Profile
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <NavigationMenu className="ml-auto">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link href="/api/auth/signout" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Sign out
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </main>
+    </>
   );
 }
