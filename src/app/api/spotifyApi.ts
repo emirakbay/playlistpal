@@ -16,7 +16,9 @@ export const fetchTopSongs = async (session: Session) => {
   return data;
 };
 
-export const fetchFeaturedPlaylists = async (session: Session) => {
+export const fetchFeaturedPlaylists = async (
+  session: Session,
+): Promise<FeaturedPlaylists> => {
   const res = await fetch(
     `https://api.spotify.com/v1/browse/featured-playlists?limit=25`,
     {
@@ -26,7 +28,7 @@ export const fetchFeaturedPlaylists = async (session: Session) => {
     },
   );
 
-  const data = (await res.json()) as { items: FeaturedPlaylists[] };
+  const data = (await res.json()) as FeaturedPlaylists;
 
   return data;
 };

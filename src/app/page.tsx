@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import RecommendedTracks from "~/components/recommended-tracks";
+import PopularPlaylists from "~/components/popular-playlists";
 import TopTracks from "~/components/top-tracks";
 import { getServerAuthSession } from "~/server/auth";
-import { fetchTopSongs } from "./api/spotifyApi";
+import { fetchFeaturedPlaylists, fetchTopSongs } from "./api/spotifyApi";
 
 export default async function HomePage() {
   const session = await getServerAuthSession();
@@ -12,11 +12,13 @@ export default async function HomePage() {
   }
 
   const songs = await fetchTopSongs(session);
+  const playlists = await fetchFeaturedPlaylists(session);
+  console.log("🚀 ~ HomePage ~ playlists:", playlists);
 
   return (
     <>
       <TopTracks items={songs.items} />
-      <RecommendedTracks />
+      <PopularPlaylists playlists={playlists} />
     </>
   );
 }

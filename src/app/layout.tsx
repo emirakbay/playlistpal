@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <Menu />
-        <section className="items-center bg-gradient-to-l from-[#62d089] to-[#457e59] text-white sm:flex-col lg:h-[calc(100vh-2.25rem)] lg:flex-row">
+        <section className="items-center bg-gradient-to-r from-green-200 via-gray-800 to-green-900 text-white sm:flex-col lg:h-[calc(100vh-2.25rem)] lg:flex-row">
           {children}
         </section>
       </body>
