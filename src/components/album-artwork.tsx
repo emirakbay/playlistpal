@@ -113,6 +113,7 @@ export function AlbumArtwork({
                           stroke="currentColor"
                           width={26}
                           height={26}
+                          className="hidden cursor-pointer md:block lg:block"
                         >
                           <path
                             stroke-linecap="round"
