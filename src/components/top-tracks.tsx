@@ -1,7 +1,7 @@
 import React from "react";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Track } from "~/types/spotify-types";
 import { AlbumArtwork } from "./album-artwork";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 export default function TopTracks(tracks: { items: Track[] }) {
   console.log("🚀 ~ TopTracks ~ tracks:", tracks);

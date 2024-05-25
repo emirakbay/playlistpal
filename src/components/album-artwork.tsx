@@ -12,10 +12,10 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import {
-  TooltipProvider,
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "~/components/ui/tooltip";
 
 type AlbumArtworkProps = {
@@ -68,7 +68,7 @@ export function AlbumArtwork({
                   ref={popoverRef}
                   className="flex h-auto w-auto flex-row gap-2 rounded-md bg-transparent p-2 text-black shadow-md backdrop-blur-lg backdrop-contrast-75 backdrop-saturate-150 backdrop-filter transition-all duration-300 ease-in-out hover:bg-white hover:bg-opacity-50 hover:backdrop-blur-lg hover:backdrop-contrast-75 hover:backdrop-saturate-150"
                 >
-                  <TooltipProvider>
+                  {/* <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
                         <svg
@@ -95,7 +95,7 @@ export function AlbumArtwork({
                         </TooltipContent>
                       </TooltipTrigger>
                     </Tooltip>
-                  </TooltipProvider>
+                  </TooltipProvider> */}
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
