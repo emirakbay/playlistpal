@@ -1,7 +1,7 @@
 import React from "react";
 import { Track } from "~/types/spotify-types";
-import { AlbumArtwork } from "./album-artwork";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { FeaturedSlider } from "../album-artwork";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function TopTracks(tracks: { items: Track[] }) {
   return (
@@ -11,7 +11,7 @@ export default function TopTracks(tracks: { items: Track[] }) {
         <ScrollArea>
           <div className="flex space-x-4 pb-4 pt-2">
             {tracks.items.map((album: Track, index: number) => (
-              <AlbumArtwork
+              <FeaturedSlider
                 key={index}
                 album={{
                   name: album.name,
@@ -25,6 +25,7 @@ export default function TopTracks(tracks: { items: Track[] }) {
                 height={330}
                 externalUrl={album.external_urls.spotify}
                 uri={album.uri}
+                displayArtist={true}
               />
             ))}
           </div>

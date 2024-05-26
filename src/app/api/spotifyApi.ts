@@ -32,3 +32,18 @@ export const fetchFeaturedPlaylists = async (
 
   return data;
 };
+
+export const fetchTopArtists = async (session: Session): Promise<any> => {
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.user.access_token}`,
+      },
+    },
+  );
+
+  const data = (await res.json()) as any;
+
+  return data;
+};

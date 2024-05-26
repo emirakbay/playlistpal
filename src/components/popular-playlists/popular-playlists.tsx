@@ -1,7 +1,7 @@
 import React from "react";
 import { FeaturedPlaylists, SimplifiedPlaylist } from "~/types/spotify-types";
-import { AlbumArtwork } from "./album-artwork";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { FeaturedSlider } from "../album-artwork";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function PopularPlaylists(props: {
   playlists: FeaturedPlaylists;
@@ -14,7 +14,7 @@ export default function PopularPlaylists(props: {
           <div className="flex space-x-4 pb-4">
             {props.playlists.playlists.items.map(
               (playlist: SimplifiedPlaylist) => (
-                <AlbumArtwork
+                <FeaturedSlider
                   key={playlist.name}
                   album={{
                     name: playlist.name,
@@ -27,6 +27,7 @@ export default function PopularPlaylists(props: {
                   height={330}
                   externalUrl={playlist.external_urls.spotify}
                   uri={playlist.uri}
+                  displayArtist={true}
                 />
               ),
             )}
