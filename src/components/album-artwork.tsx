@@ -12,10 +12,10 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import {
-  TooltipProvider,
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "~/components/ui/tooltip";
 
 type AlbumArtworkProps = {
@@ -58,7 +58,7 @@ export function AlbumArtwork({
                   width={width}
                   height={height}
                   className={cn(
-                    "h-[250px] w-[250px] rounded-md object-cover transition-all hover:scale-105 sm:h-min sm:w-min sm:rounded-md",
+                    "rounded-md object-cover transition-all hover:scale-105 sm:h-[50px] sm:w-[50px] md:h-[150px] md:w-[150px]",
                     aspectRatio === "portrait"
                       ? "aspect-[3/4]"
                       : "aspect-square",

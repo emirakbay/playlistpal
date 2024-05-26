@@ -13,7 +13,6 @@ export default async function HomePage() {
 
   const songs = await fetchTopSongs(session);
   const playlists = await fetchFeaturedPlaylists(session);
-  console.log("🚀 ~ HomePage ~ playlists:", playlists);
 
   return (
     <>
