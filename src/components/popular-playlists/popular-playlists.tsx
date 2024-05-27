@@ -7,11 +7,11 @@ export default function PopularPlaylists(props: {
   playlists: FeaturedPlaylists;
 }) {
   return (
-    <section className="flex flex-col gap-2 bg-gradient-to-l from-amber-400 via-lime-500 to-red-500 px-10 pt-2">
+    <section className="flex flex-col gap-2 bg-gradient-to-l from-amber-400 via-lime-500 to-red-500 px-10 pt-2 h-1/3">
       <span className="text-black">Top Playlists Lately</span>
       <div className="relative">
         <ScrollArea>
-          <div className="flex space-x-4 pb-4">
+          <div className="flex space-x-4 pb-4 pt-2">
             {props.playlists.playlists.items.map(
               (playlist: SimplifiedPlaylist) => (
                 <FeaturedSlider

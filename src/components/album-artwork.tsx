@@ -41,6 +41,7 @@ export function FeaturedSlider({
   aspectRatio = "portrait",
   width,
   height,
+  displayArtist,
   className,
   ...props
 }: AlbumArtworkProps) {
@@ -59,7 +60,8 @@ export function FeaturedSlider({
                   width={width}
                   height={height}
                   className={cn(
-                    "rounded-md object-cover transition-all hover:scale-105 sm:h-[50px] sm:w-[50px] md:h-[150px] md:w-[150px]",
+                    // "rounded-md object-cover transition-all hover:scale-105 sm:h-[50px] sm:w-[50px] md:h-[150px] md:w-[150px]",
+                    "h-[350px] w-[250px] rounded-md object-cover transition-all hover:scale-105 sm:h-min sm:w-min sm:rounded-md",
                     aspectRatio === "portrait"
                       ? "aspect-[3/4]"
                       : "aspect-square",
@@ -146,7 +148,7 @@ export function FeaturedSlider({
           )}
           {album.name}
         </h3>
-        {props.displayArtist && <p>{album.artist}</p>}
+        {displayArtist && <p>{album.artist}</p>}
       </div>
     </div>
   );

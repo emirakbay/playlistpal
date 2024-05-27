@@ -5,7 +5,7 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function TopTracks(tracks: { items: Track[] }) {
   return (
-    <section className="flex flex-col gap-2 bg-gradient-to-l from-amber-400 via-lime-500 to-red-500 px-10 pt-2">
+    <section className="flex h-1/3 flex-col gap-2 bg-gradient-to-l from-amber-400 via-lime-500 to-red-500 px-10 pt-2">
       <span className="text-black">Top 50 Lately</span>
       <div className="relative">
         <ScrollArea>
