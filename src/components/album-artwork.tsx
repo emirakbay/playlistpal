@@ -60,8 +60,7 @@ export function FeaturedSlider({
                   width={width}
                   height={height}
                   className={cn(
-                    // "rounded-md object-cover transition-all hover:scale-105 sm:h-[50px] sm:w-[50px] md:h-[150px] md:w-[150px]",
-                    "h-[350px] w-[250px] rounded-md object-cover transition-all hover:scale-105 sm:h-min sm:w-min sm:rounded-md",
+                    "rounded-md object-cover transition-all hover:scale-105 sm:h-[50px] sm:w-[50px] md:h-[150px] md:w-[150px]",
                     aspectRatio === "portrait"
                       ? "aspect-[3/4]"
                       : "aspect-square",

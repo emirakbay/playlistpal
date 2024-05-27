@@ -1,14 +1,13 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
+import * as React from "react";
 
-import { navigationMenuTriggerStyle } from "~/components/ui/navigation-menu";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuList,
+  NavigationMenuList, navigationMenuTriggerStyle
 } from "~/components/ui/navigation-menu";
 import { cn } from "~/lib/utils";
 

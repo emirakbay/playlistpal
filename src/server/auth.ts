@@ -94,7 +94,6 @@ export const authOptions: NextAuthOptions = {
             throw token;
           }
           const data = (await response.json()) as AccessToken;
-          console.log("🚀 ~ jwt: ~ data:", data);
           return {
             ...token,
             access_token: data.access_token,
