@@ -2,6 +2,8 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { Menu } from "~/components/top-bar";
+import { SessionProvider } from "next-auth/react";
+import { NextAuthProvider } from "~/providers";
 
 export const metadata = {
   title: "playlistpal",
@@ -17,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <Menu />
-        <section className="items-center bg-slate-900 text-white sm:flex-col lg:h-[calc(100vh-2.25rem)] lg:flex-row">
-          {children}
-        </section>
+        <NextAuthProvider>
+          <Menu />
+          <section className="items-center bg-slate-900 text-white sm:flex-col lg:h-[calc(100vh-2.25rem)] lg:flex-row">
+            {children}
+          </section>
+        </NextAuthProvider>
       </body>
     </html>
   );

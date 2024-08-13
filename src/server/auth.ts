@@ -1,8 +1,8 @@
 import {
   getServerSession,
-  type User,
   type DefaultSession,
   type NextAuthOptions,
+  type User,
 } from "next-auth";
 import Spotify from "next-auth/providers/spotify";
 
