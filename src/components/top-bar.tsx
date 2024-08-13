@@ -7,7 +7,8 @@ import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuList, navigationMenuTriggerStyle
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
 import { cn } from "~/lib/utils";
 
@@ -20,18 +21,14 @@ export function Menu() {
             <NavigationMenuItem>
               <Link href="/" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  <span className={cn("text-lg font-bold", "text-black")}>
-                    Home
-                  </span>
+                  <span className={cn("text-base font-bold")}>Home</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/profile" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  <span className={cn("text-lg font-bold", "text-black")}>
-                    Profile
-                  </span>
+                  <span className={cn("text-base font-bold")}>Profile</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -42,9 +39,7 @@ export function Menu() {
             <NavigationMenuItem>
               <Link href="/api/auth/signout" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  <span className={cn("text-lg font-bold", "text-black")}>
-                    Sign Out
-                  </span>
+                  <span className={cn("text-base font-bold")}>Sign Out</span>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>

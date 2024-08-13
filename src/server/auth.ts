@@ -137,7 +137,10 @@ export const authOptions: NextAuthOptions = {
           scope:
             "user-read-email user-read-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-follow-read user-follow-modify",
           response_type: "code",
-          redirect_uri: process.env.NODE_ENV === "development" ? env.SPOTIFY_DEVELOPMENT_REDIRECT_URI : env.SPOTIFY_REDIRECT_URI,
+          redirect_uri:
+            process.env.NODE_ENV === "development"
+              ? env.SPOTIFY_DEVELOPMENT_REDIRECT_URI
+              : env.SPOTIFY_REDIRECT_URI,
         },
       },
     }),

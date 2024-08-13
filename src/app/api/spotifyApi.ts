@@ -73,3 +73,18 @@ export const fetchTopArtists = async (
 
   return data;
 };
+
+export const fetchRecommendations = async (session: Session) => {
+  const res = await fetch(
+    `https://api.spotify.com/v1/recommendations?limit=10&seed_genres=pop`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.user.access_token}`,
+      },
+    },
+  );
+
+  const data = (await res.json()) as { items: Track[] };
+
+  return data;
+};

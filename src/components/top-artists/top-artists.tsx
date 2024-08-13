@@ -9,8 +9,8 @@ export default function TopArtists(props: {
   };
 }) {
   return (
-    <section className="flex h-1/3 flex-col gap-2 bg-gradient-to-l from-amber-400 via-lime-500 to-red-500 px-10 pt-2">
-      <span className="text-black">Top Artists Lately</span>
+    <section className="flex h-1/3 flex-col gap-2 px-10 pt-2">
+      <span className="">Top Artists Lately</span>
       <div className="relative">
         <ScrollArea>
           <div className="flex space-x-4 pb-4 pt-2">
@@ -23,7 +23,7 @@ export default function TopArtists(props: {
                   cover: artist.images[1]?.url,
                   order: index + 1,
                 }}
-                className="w-[150px] sm:w-[50px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"
+                className="w-[150px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"
                 aspectRatio="square"
                 width={250}
                 height={330}

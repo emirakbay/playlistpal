@@ -68,7 +68,7 @@ export function FeaturedSlider({
                 />
                 <PopoverContent
                   ref={popoverRef}
-                  className="flex h-auto w-auto flex-row gap-2 rounded-md bg-transparent p-2 text-black shadow-md backdrop-blur-lg backdrop-contrast-75 backdrop-saturate-150 backdrop-filter transition-all duration-300 ease-in-out hover:bg-white hover:bg-opacity-50 hover:backdrop-blur-lg hover:backdrop-contrast-75 hover:backdrop-saturate-150"
+                  className="flex h-auto w-auto flex-row gap-2 rounded-md bg-transparent p-2 shadow-md backdrop-blur-lg backdrop-contrast-75 backdrop-saturate-150 backdrop-filter transition-all duration-300 ease-in-out hover:bg-white hover:bg-opacity-50 hover:backdrop-blur-lg hover:backdrop-contrast-75 hover:backdrop-saturate-150"
                 >
                   <TooltipProvider>
                     <Tooltip>
@@ -135,7 +135,7 @@ export function FeaturedSlider({
           </div>
         </ContextMenuTrigger>
       </ContextMenu>
-      <div className="space-y-1 text-center text-sm text-black">
+      <div className="space-y-1 text-center text-sm">
         <h3 className="font-medium leading-none">
           {album.order ? (
             <span>
