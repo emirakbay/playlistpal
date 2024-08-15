@@ -18,14 +18,12 @@ export default async function HomePage() {
 
   const songs = await fetchTopSongs(session);
   const topArtists = await fetchTopArtists(session);
-  // const playlists = await fetchFeaturedPlaylists(session);
   const recommendedTracks = await fetchRecommendations(session);
 
   return (
     <>
       <TopTracks items={songs.items} />
       <TopArtists items={topArtists} />
-      {/* <PopularPlaylists playlists={playlists} /> */}
       <GetRecommendations recommendedTracks={recommendedTracks} />
     </>
   );

@@ -8,7 +8,7 @@ export default function GetRecommendations(props: any) {
         <span className="">Recommended Tracks</span>
         <div className="relative">
           <ScrollArea>
-            <div className="flex space-x-4 pb-4 pt-2">
+            <div className="flex space-x-8 pb-4 pt-2">
               {props.recommendedTracks.tracks.map(
                 (album: any, index: number) => (
                   <div
@@ -16,8 +16,14 @@ export default function GetRecommendations(props: any) {
                     className="w-[150px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"
                   >
                     <img src={album.album.images[1]?.url} alt={album.name} />
-                    <span>{album.name}</span>
-                    <span>{album.artists[0]?.name}</span>
+                    <div className="flex flex-col pt-4 gap-2">
+                      <span className="text-center text-sm font-medium leading-none">
+                        {album.name}
+                      </span>
+                      <span className="text-center text-sm font-medium leading-none">
+                        {album.artists[0]?.name}
+                      </span>
+                    </div>
                   </div>
                 ),
               )}
