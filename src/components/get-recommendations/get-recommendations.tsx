@@ -1,6 +1,6 @@
 import React from "react";
+import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import Image from "next/image";
 
 export default function GetRecommendations(props: any) {
   return (
@@ -12,20 +12,22 @@ export default function GetRecommendations(props: any) {
             <div className="flex space-x-8 pb-4 pt-2">
               {props.recommendedTracks.tracks.map(
                 (album: any, index: number) => (
-                  <div
+                  <FeaturedSlider
                     key={index}
+                    album={{
+                      name: album.name,
+                      artist: album.artists[0]?.name,
+                      cover: album.album.images[1]?.url,
+                      order: index + 1,
+                    }}
                     className="w-[150px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"
-                  >
-                    <Image src={album.album.images[1]?.url} alt={album.name} />
-                    <div className="flex flex-col gap-2 pt-4">
-                      <span className="text-center text-xs font-medium leading-none">
-                        {album.name}
-                      </span>
-                      <span className="text-center text-xs font-medium leading-none">
-                        {album.artists[0]?.name}
-                      </span>
-                    </div>
-                  </div>
+                    aspectRatio="square"
+                    width={250}
+                    height={330}
+                    externalUrl={album.external_urls.spotify}
+                    uri={album.uri}
+                    displayArtist={true}
+                  />
                 ),
               )}
             </div>

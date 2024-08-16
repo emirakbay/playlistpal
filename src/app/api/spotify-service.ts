@@ -80,7 +80,7 @@ export const fetchTopArtists = async (
 
 export const fetchRecommendations = async (session: Session) => {
   const res = await fetch(
-    `https://api.spotify.com/v1/recommendations?limit=10&seed_genres=pop`,
+    `https://api.spotify.com/v1/recommendations?limit=20&seed_genres=pop`,
     {
       headers: {
         Authorization: `Bearer ${session.user.access_token}`,

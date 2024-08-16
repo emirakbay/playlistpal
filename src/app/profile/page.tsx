@@ -11,7 +11,6 @@ export default async function ProfilePage() {
   }
 
   const history = await fetchRecentlyPlayed(session);
-  console.log("🚀 ~ ProfilePage ~ history:", history)
 
   return (
     <div>
