@@ -1,5 +1,6 @@
 import React from "react";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import Image from "next/image";
 
 export default function GetRecommendations(props: any) {
   return (
@@ -15,12 +16,12 @@ export default function GetRecommendations(props: any) {
                     key={index}
                     className="w-[150px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"
                   >
-                    <img src={album.album.images[1]?.url} alt={album.name} />
-                    <div className="flex flex-col pt-4 gap-2">
-                      <span className="text-center text-sm font-medium leading-none">
+                    <Image src={album.album.images[1]?.url} alt={album.name} />
+                    <div className="flex flex-col gap-2 pt-4">
+                      <span className="text-center text-xs font-medium leading-none">
                         {album.name}
                       </span>
-                      <span className="text-center text-sm font-medium leading-none">
+                      <span className="text-center text-xs font-medium leading-none">
                         {album.artists[0]?.name}
                       </span>
                     </div>

@@ -7,7 +7,7 @@ import {
   fetchRecommendations,
   fetchTopArtists,
   fetchTopSongs,
-} from "./api/spotifyApi";
+} from "./api/spotify-service";
 
 export default async function HomePage() {
   const session = await getServerAuthSession();

@@ -1,5 +1,5 @@
 import React from "react";
-import { Track } from "~/types/spotify-types";
+import { type Track } from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 

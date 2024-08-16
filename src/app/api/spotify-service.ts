@@ -1,5 +1,9 @@
-import { Session } from "next-auth";
-import { FeaturedPlaylists, Track } from "~/types/spotify-types";
+import { type Session } from "next-auth";
+import {
+  type FeaturedPlaylists,
+  type PlayHistory,
+  type Track,
+} from "~/types/spotify-types";
 
 export type TopArtists = {
   items: {
@@ -85,6 +89,21 @@ export const fetchRecommendations = async (session: Session) => {
   );
 
   const data = (await res.json()) as { items: Track[] };
+
+  return data;
+};
+
+export const fetchRecentlyPlayed = async (session: Session) => {
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/player/recently-played?limit=50`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.user.access_token}`,
+      },
+    },
+  );
+
+  const data = (await res.json()) as { items: PlayHistory[] };
 
   return data;
 };

@@ -1,5 +1,21 @@
-import React from "react";
+import { redirect } from "next/navigation";
+import { getServerAuthSession } from "~/server/auth";
+import { fetchRecentlyPlayed } from "../api/spotify-service";
+import { RecentlyPlayedTable } from "~/components/recently-played/recently-played-table";
 
-export default function Page() {
-  return <div>Profile Page</div>;
+export default async function ProfilePage() {
+  const session = await getServerAuthSession();
+
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
+
+  const history = await fetchRecentlyPlayed(session);
+  console.log("🚀 ~ ProfilePage ~ history:", history)
+
+  return (
+    <div>
+      <RecentlyPlayedTable data={history.items} />
+    </div>
+  );
 }

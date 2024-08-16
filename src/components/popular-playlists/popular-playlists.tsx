@@ -1,5 +1,8 @@
 import React from "react";
-import { FeaturedPlaylists, SimplifiedPlaylist } from "~/types/spotify-types";
+import {
+  type FeaturedPlaylists,
+  type SimplifiedPlaylist,
+} from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 

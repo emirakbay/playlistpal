@@ -1,5 +1,5 @@
 import React from "react";
-import { Artist } from "~/types/spotify-types";
+import { type Artist } from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 

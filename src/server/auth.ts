@@ -7,7 +7,7 @@ import {
 import Spotify from "next-auth/providers/spotify";
 
 import { env } from "~/env";
-import { AccessToken } from "~/types/spotify-types";
+import { type AccessToken } from "~/types/spotify-types";
 // import { type RefreshTokenResponse } from "~/types/spotify-types";
 
 /**

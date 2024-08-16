@@ -135,7 +135,7 @@ export function FeaturedSlider({
           </div>
         </ContextMenuTrigger>
       </ContextMenu>
-      <div className="space-y-1 text-center text-sm">
+      <div className="space-y-1 text-center text-xs">
         <h3 className="font-medium leading-none">
           {album.order ? (
             <span>
