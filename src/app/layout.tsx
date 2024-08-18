@@ -16,9 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="overflow-hidden">
+      <body>
         <Menu />
-        <section className="items-center bg-slate-900 text-white sm:flex-col lg:flex-row min-h-screen">
+        <section className="min-h-screen items-center bg-slate-900 text-white sm:flex-col lg:flex-row">
           {children}
         </section>
       </body>

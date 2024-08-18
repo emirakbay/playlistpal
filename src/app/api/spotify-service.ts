@@ -1,7 +1,7 @@
 import { type Session } from "next-auth";
 import {
   type FeaturedPlaylists,
-  type PlayHistory,
+  type RecentlyPlayedTracksPage,
   type Track,
 } from "~/types/spotify-types";
 
@@ -95,7 +95,7 @@ export const fetchRecommendations = async (session: Session) => {
 
 export const fetchRecentlyPlayed = async (session: Session) => {
   const res = await fetch(
-    `https://api.spotify.com/v1/me/player/recently-played?limit=50`,
+    `https://api.spotify.com/v1/me/player/recently-played?limit=50&before=${Date.now()}`,
     {
       headers: {
         Authorization: `Bearer ${session.user.access_token}`,
@@ -103,7 +103,7 @@ export const fetchRecentlyPlayed = async (session: Session) => {
     },
   );
 
-  const data = (await res.json()) as { items: PlayHistory[] };
+  const data = (await res.json()) as RecentlyPlayedTracksPage;
 
   return data;
 };

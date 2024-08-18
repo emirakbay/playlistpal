@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
   type VisibilityState,
@@ -12,19 +11,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import {
@@ -35,88 +28,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { convertISOToNormalTime } from "~/lib/utils";
 import { type PlayHistory } from "~/types/spotify-types";
-
-export const columns: ColumnDef<PlayHistory>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value: any) =>
-          table.toggleAllPageRowsSelected(!!value)
-        }
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value: any) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "track.name",
-    id: "name",
-    header: "Name",
-    cell: ({ row }) => row.original.track.name,
-  },
-  {
-    id: "artist",
-    header: "Artist",
-    cell: ({ row }) => row.original.track.artists[0]?.name,
-  },
-  {
-    id: "album",
-    header: "Album",
-    cell: ({ row }) => row.original.track.album.name,
-  },
-  {
-    id: "played_at",
-    header: "Played at",
-    cell: ({ row }) => convertISOToNormalTime(row.original.played_at),
-  },
-  {
-    id: "duration",
-    header: "Duration",
-    cell: ({ row }) => row.original.track.duration_ms,
-  },
-  {
-    id: "popularity",
-    header: "Popularity",
-    cell: ({ row }) => row.original.track.popularity,
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({}) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+import { columns } from "./columns";
 
 interface Props {
   data: PlayHistory[];
@@ -130,7 +43,6 @@ export function RecentlyPlayedTable(props: Props) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
   const [data, setData] = React.useState<PlayHistory[]>(props.data);
 
   const table = useReactTable({
@@ -157,7 +69,8 @@ export function RecentlyPlayedTable(props: Props) {
   }, [data, props.data, table]);
 
   return (
-    <div className="w-full">
+    <div className="mx-auto w-[350px] pt-2 md:mx-0 md:w-[700px] md:pl-2">
+      <div className="text-base">Recently Played 50</div>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter by track name"
@@ -168,11 +81,6 @@ export function RecentlyPlayedTable(props: Props) {
           className="max-w-sm"
         />
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()
@@ -201,7 +109,7 @@ export function RecentlyPlayedTable(props: Props) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-center">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -220,9 +128,13 @@ export function RecentlyPlayedTable(props: Props) {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="text-nowrap hover:cursor-pointer"
+                  onClick={() => {
+                    window.open(row.original.track.external_urls.spotify);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -245,10 +157,6 @@ export function RecentlyPlayedTable(props: Props) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"

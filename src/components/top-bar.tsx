@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import * as React from "react";
-
+import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,6 +11,8 @@ import {
 import { cn } from "~/lib/utils";
 
 export function Menu() {
+  const pathname = usePathname();
+
   return (
     <>
       <main className="flex flex-row bg-slate-900 pl-5 pt-3">
@@ -24,6 +25,7 @@ export function Menu() {
                     <span
                       className={cn(
                         "text-base font-bold text-background/70 hover:text-background/90",
+                        pathname === "/" ? "text-white" : "",
                       )}
                     >
                       Home
@@ -37,6 +39,7 @@ export function Menu() {
                     <span
                       className={cn(
                         "text-base font-bold text-background/70 hover:text-background/90",
+                        pathname === "/profile" ? "text-white" : "",
                       )}
                     >
                       Profile
@@ -50,6 +53,7 @@ export function Menu() {
                     <span
                       className={cn(
                         "text-base font-bold text-background/70 hover:text-background/90",
+                        pathname === "/playlists" ? "text-white" : "",
                       )}
                     >
                       Playlists
