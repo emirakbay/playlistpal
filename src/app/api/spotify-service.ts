@@ -8,30 +8,6 @@ import {
   type Track,
 } from "~/types/spotify-types";
 
-// export type TopArtists = {
-//   items: {
-//     external_urls: {
-//       spotify: string;
-//     };
-//     followers: {
-//       href: string;
-//       total: number;
-//     };
-//     genres: string[];
-//     href: string;
-//     id: string;
-//     images: {
-//       url: string;
-//       height: number;
-//       width: number;
-//     }[];
-//     name: string;
-//     popularity: number;
-//     type: string;
-//     uri: string;
-//   }[];
-// };
-
 export const fetchTopSongs = async (session: Session) => {
   const res = await fetch(
     `https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50`,
