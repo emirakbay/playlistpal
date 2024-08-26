@@ -12,8 +12,8 @@ export const columns: ColumnDef<PlayHistory>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value: any) =>
-          table.toggleAllPageRowsSelected(!!value)
+        onCheckedChange={(value: boolean) =>
+          table.toggleAllPageRowsSelected(value)
         }
         aria-label="Select all"
       />
@@ -21,7 +21,7 @@ export const columns: ColumnDef<PlayHistory>[] = [
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value: any) => row.toggleSelected(!!value)}
+        onCheckedChange={(value: boolean) => row.toggleSelected(value)}
         aria-label="Select row"
       />
     ),

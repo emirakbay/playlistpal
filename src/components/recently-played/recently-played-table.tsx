@@ -70,12 +70,13 @@ export function RecentlyPlayedTable(props: Props) {
 
   return (
     <div className="mx-auto w-[350px] pt-2 md:mx-0 md:w-[700px] md:pl-2">
-      <div className="text-base">Recently Played 50</div>
+      <div className="text-base">Last Played 50</div>
+      <p>Offline sessions are not tracked.</p>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter by track name"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event: any) =>
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
@@ -91,8 +92,8 @@ export function RecentlyPlayedTable(props: Props) {
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value: any) =>
-                      column.toggleVisibility(!!value)
+                    onCheckedChange={(value: boolean) =>
+                      column.toggleVisibility(value)
                     }
                   >
                     {column.id}
@@ -159,7 +160,7 @@ export function RecentlyPlayedTable(props: Props) {
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -167,7 +168,7 @@ export function RecentlyPlayedTable(props: Props) {
             Previous
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}

@@ -5,7 +5,7 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function TopArtists(props: {
   items: {
-    items: Artist[];
+    items: Artist[] | null;
   };
 }) {
   return (
@@ -14,7 +14,7 @@ export default function TopArtists(props: {
       <div className="relative">
         <ScrollArea>
           <div className="flex space-x-4 pb-4 pt-2">
-            {props.items.items.map((artist: Artist, index: number) => (
+            {props.items.items?.map((artist: Artist, index: number) => (
               <FeaturedSlider
                 key={index}
                 album={{

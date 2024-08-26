@@ -1,33 +1,36 @@
 import { type Session } from "next-auth";
 import {
+  type TopArtists,
+  type Artist,
   type FeaturedPlaylists,
   type RecentlyPlayedTracksPage,
+  type Recommendations,
   type Track,
 } from "~/types/spotify-types";
 
-export type TopArtists = {
-  items: {
-    external_urls: {
-      spotify: string;
-    };
-    followers: {
-      href: string;
-      total: number;
-    };
-    genres: string[];
-    href: string;
-    id: string;
-    images: {
-      url: string;
-      height: number;
-      width: number;
-    }[];
-    name: string;
-    popularity: number;
-    type: string;
-    uri: string;
-  }[];
-};
+// export type TopArtists = {
+//   items: {
+//     external_urls: {
+//       spotify: string;
+//     };
+//     followers: {
+//       href: string;
+//       total: number;
+//     };
+//     genres: string[];
+//     href: string;
+//     id: string;
+//     images: {
+//       url: string;
+//       height: number;
+//       width: number;
+//     }[];
+//     name: string;
+//     popularity: number;
+//     type: string;
+//     uri: string;
+//   }[];
+// };
 
 export const fetchTopSongs = async (session: Session) => {
   const res = await fetch(
@@ -78,19 +81,51 @@ export const fetchTopArtists = async (
   return data;
 };
 
-export const fetchRecommendations = async (session: Session) => {
-  const res = await fetch(
-    `https://api.spotify.com/v1/recommendations?limit=20&seed_genres=pop`,
-    {
-      headers: {
-        Authorization: `Bearer ${session.user.access_token}`,
+export const fetchRecommendations = async (
+  session: Session,
+  songs: { items: Track[] },
+  topArtists: { items: Artist[] },
+) => {
+  const topThreeArtists = topArtists.items
+    .slice(0, 3)
+    .map((artist: Artist) => artist.id);
+  const topThreeSongs = songs.items.slice(0, 3).map((song) => song.id);
+  const topThreeArtistsGenres = topArtists.items
+    .slice(0, 3)
+    .flatMap((artist: Artist) => artist.genres);
+
+  const res = await Promise.all([
+    fetch(
+      `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[0]}&seed_tracks=${topThreeSongs[0]}&seed_genres=${topThreeArtistsGenres[0]}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.access_token}`,
+        },
       },
-    },
-  );
+    ),
+    fetch(
+      `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[1]}&seed_tracks=${topThreeSongs[1]}&seed_genres=${topThreeArtistsGenres[1]}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.access_token}`,
+        },
+      },
+    ),
+    fetch(
+      `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[2]}&seed_tracks=${topThreeSongs[2]}&seed_genres=${topThreeArtistsGenres[2]}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.access_token}`,
+        },
+      },
+    ),
+  ]);
 
-  const data = (await res.json()) as { items: Track[] };
-
-  return data;
+  const data = (await Promise.all(
+    res.map((res) => res.json()),
+  )) as Recommendations[];
+  const combinedTracks = data.flatMap((item) => item.tracks);
+  return combinedTracks;
 };
 
 export const fetchRecentlyPlayed = async (session: Session) => {
@@ -104,6 +139,5 @@ export const fetchRecentlyPlayed = async (session: Session) => {
   );
 
   const data = (await res.json()) as RecentlyPlayedTracksPage;
-
   return data;
 };
