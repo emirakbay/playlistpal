@@ -24,15 +24,16 @@ export default async function HomePage() {
     await kv.set("topSongs", songs, { ex: 3600 });
   }
 
-  const topArtists = await kv.get<{ items: Artist[] }>("topArtists");
+  let topArtists = await kv.get<{ items: Artist[] }>("topArtists");
   if (!topArtists) {
-    topArtists!.items = await fetchTopArtists(session);
+    const fetchedArtists = await fetchTopArtists(session);
+    topArtists = { items: fetchedArtists };
     await kv.set("topArtists", topArtists, { ex: 3600 });
   }
 
   let recommendedTracks = await kv.get<Track[]>("recommendedTracks");
   if (!recommendedTracks) {
-    recommendedTracks = await fetchRecommendations(session, songs, topArtists!);
+    recommendedTracks = await fetchRecommendations(session, songs, topArtists);
     await kv.set("recommendedTracks", recommendedTracks, { ex: 3600 });
   }
 

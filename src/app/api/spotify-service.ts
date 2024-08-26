@@ -1,10 +1,10 @@
 import { type Session } from "next-auth";
 import {
-  type TopArtists,
   type Artist,
   type FeaturedPlaylists,
   type RecentlyPlayedTracksPage,
   type Recommendations,
+  type TopArtists,
   type Track,
 } from "~/types/spotify-types";
 
