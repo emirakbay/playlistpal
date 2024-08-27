@@ -4,7 +4,6 @@ import {
   type FeaturedPlaylists,
   type RecentlyPlayedTracksPage,
   type Recommendations,
-  type TopArtists,
   type Track,
 } from "~/types/spotify-types";
 
@@ -60,15 +59,13 @@ export const fetchRecommendations = async (
   songs: { items: Track[] },
   topArtists: { items: Artist[] },
 ) => {
-  const topThreeArtists = Array.isArray(topArtists.items)
-    ? topArtists.items.slice(0, 3).map((artist: Artist) => artist.id)
-    : [];
-  const topThreeSongs = Array.isArray(songs.items)
-    ? songs.items.slice(0, 3).map((song: Track) => song.id)
-    : [];
-  const topThreeArtistsGenres = Array.isArray(topArtists.items)
-    ? topArtists.items.slice(0, 3).flatMap((artist: Artist) => artist.genres)
-    : [];
+  const topThreeArtists = topArtists.items
+    .slice(0, 3)
+    .map((artist) => artist.id);
+  const topThreeSongs = songs.items.slice(0, 3).map((song) => song.id);
+  const topThreeArtistsGenres = topArtists.items
+    .slice(0, 3)
+    .flatMap((artist) => artist.genres);
 
   const res = await Promise.all([
     fetch(
