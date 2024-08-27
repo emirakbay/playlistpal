@@ -1,10 +1,6 @@
 "use client";
+
 import Image from "next/image";
-
-import { cn } from "~/lib/utils";
-
-import { ContextMenu, ContextMenuTrigger } from "./ui/context-menu";
-
 import { useRef } from "react";
 import {
   Popover,
@@ -17,6 +13,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { cn } from "~/lib/utils";
+import { ContextMenu, ContextMenuTrigger } from "./ui/context-menu";
 
 type AlbumArtworkProps = {
   album: {
@@ -68,7 +66,7 @@ export function FeaturedSlider({
                 />
                 <PopoverContent
                   ref={popoverRef}
-                  className="flex h-auto w-auto flex-row gap-2 rounded-md bg-transparent p-2 shadow-md backdrop-blur-lg backdrop-contrast-75 backdrop-saturate-150 backdrop-filter transition-all duration-300 ease-in-out hover:bg-white hover:bg-opacity-50 hover:backdrop-blur-lg hover:backdrop-contrast-75 hover:backdrop-saturate-150"
+                  className="flex h-auto w-auto flex-row rounded-md bg-transparent p-2 shadow-md backdrop-blur-lg backdrop-contrast-75 backdrop-saturate-150 backdrop-filter transition-all duration-300 ease-in-out hover:bg-white hover:bg-opacity-50 hover:backdrop-blur-lg hover:backdrop-contrast-75 hover:backdrop-saturate-150 sm:gap-2"
                 >
                   <TooltipProvider>
                     <Tooltip>
