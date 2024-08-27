@@ -40,9 +40,7 @@ export const fetchFeaturedPlaylists = async (
   return data;
 };
 
-export const fetchTopArtists = async (
-  session: Session,
-): Promise<TopArtists> => {
+export const fetchTopArtists = async (session: Session) => {
   const res = await fetch(
     `https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50`,
     {
@@ -52,7 +50,7 @@ export const fetchTopArtists = async (
     },
   );
 
-  const data = (await res.json()) as TopArtists;
+  const data = (await res.json()) as { items: Artist[] };
 
   return data;
 };

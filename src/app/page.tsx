@@ -26,8 +26,7 @@ export default async function HomePage() {
 
   let topArtists = await kv.get<{ items: Artist[] }>("topArtists");
   if (!topArtists) {
-    const fetchedArtists = await fetchTopArtists(session);
-    topArtists = { items: fetchedArtists };
+    topArtists = await fetchTopArtists(session);
     await kv.set("topArtists", topArtists, { ex: 3600 });
   }
 
@@ -40,7 +39,7 @@ export default async function HomePage() {
   return (
     <>
       <TopTracks items={songs.items} />
-      <TopArtists items={{ items: topArtists?.items ?? null }} />
+      <TopArtists items={topArtists.items} />
       <GetRecommendations recommendedTracks={recommendedTracks} />
     </>
   );

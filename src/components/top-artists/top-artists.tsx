@@ -3,18 +3,14 @@ import { type Artist } from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
-export default function TopArtists(props: {
-  items: {
-    items: Artist[] | null;
-  };
-}) {
+export default function TopArtists(topArtists: { items: Artist[] }) {
   return (
     <section className="flex h-1/3 flex-col gap-2 px-10 pt-2">
       <span className="">Top Artists Lately</span>
       <div className="relative">
         <ScrollArea>
           <div className="flex space-x-4 pb-4 pt-2">
-            {props.items.items?.map((artist: Artist, index: number) => (
+            {topArtists.items.map((artist: Artist, index: number) => (
               <FeaturedSlider
                 key={index}
                 album={{
