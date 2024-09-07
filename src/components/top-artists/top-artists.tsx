@@ -1,14 +1,22 @@
+"use client";
+
 import React from "react";
 import { type Artist } from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { useScroll } from "~/hooks/use-scroll";
 
 export default function TopArtists(topArtists: { items: Artist[] }) {
+  const { isScrolling, setIsScrolling } = useScroll();
+
   return (
     <section className="flex h-1/3 flex-col gap-2 px-10 pt-2">
       <span className="">Top Artists Lately</span>
       <div className="relative">
-        <ScrollArea>
+        <ScrollArea
+          onScrollStart={() => setIsScrolling(true)}
+          onScrollEnd={() => setIsScrolling(false)}
+        >
           <div className="flex space-x-4 pb-4 pt-2">
             {topArtists.items.map((artist: Artist, index: number) => (
               <FeaturedSlider
@@ -26,6 +34,7 @@ export default function TopArtists(topArtists: { items: Artist[] }) {
                 externalUrl={artist.external_urls.spotify}
                 uri={artist.uri}
                 displayArtist={true}
+                isScrolling={isScrolling}
               />
             ))}
           </div>

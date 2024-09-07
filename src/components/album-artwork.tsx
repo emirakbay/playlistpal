@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -30,6 +30,7 @@ type AlbumArtworkProps = {
   height?: number;
   displayArtist?: boolean;
   className?: string;
+  isScrolling: boolean;
 };
 
 export function FeaturedSlider({
@@ -41,16 +42,25 @@ export function FeaturedSlider({
   height,
   displayArtist,
   className,
+  isScrolling,
   ...props
 }: AlbumArtworkProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isScrolling && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isScrolling, isOpen]);
 
   return (
     <div className={cn("space-y-3", className)} {...props}>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
-            <Popover>
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger>
                 <Image
                   src={album.cover!}

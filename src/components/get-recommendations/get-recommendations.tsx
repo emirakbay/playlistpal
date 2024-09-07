@@ -1,19 +1,27 @@
+"use client";
+
 import React from "react";
 import { type Track } from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { useScroll } from "~/hooks/use-scroll";
 
 interface GetRecommendationsProps {
   recommendedTracks: Track[] | null;
 }
 
 export default function GetRecommendations(props: GetRecommendationsProps) {
+  const { isScrolling, setIsScrolling } = useScroll();
+
   return (
     <>
       <section className="flex h-1/3 flex-col gap-2 px-10 pt-2">
         <span className="">Recommended Tracks</span>
         <div className="relative">
-          <ScrollArea>
+          <ScrollArea
+            onScrollStart={() => setIsScrolling(true)}
+            onScrollEnd={() => setIsScrolling(false)}
+          >
             <div className="flex space-x-8 pb-4 pt-2">
               {props.recommendedTracks!.map((album: Track, index: number) => (
                 <FeaturedSlider
@@ -31,6 +39,7 @@ export default function GetRecommendations(props: GetRecommendationsProps) {
                   externalUrl={album.external_urls.spotify}
                   uri={album.uri}
                   displayArtist={true}
+                  isScrolling={isScrolling}
                 />
               ))}
             </div>
