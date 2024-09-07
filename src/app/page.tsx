@@ -18,22 +18,29 @@ export default async function HomePage() {
     redirect("/api/auth/signin");
   }
 
-  let songs = await kv.get<{ items: Track[] }>("topSongs");
+  const providerAccountId = session.user.name;
+  const getUserKey = (key: string) => `user:${providerAccountId}:${key}`;
+
+  let songs = await kv.get<{ items: Track[] }>(getUserKey("topSongs"));
   if (!songs) {
     songs = await fetchTopSongs(session);
-    await kv.set("topSongs", songs, { ex: 3600 });
+    await kv.set(getUserKey("topSongs"), songs, { ex: 3600 });
   }
 
-  let topArtists = await kv.get<{ items: Artist[] }>("topArtists");
+  let topArtists = await kv.get<{ items: Artist[] }>(getUserKey("topArtists"));
   if (!topArtists) {
     topArtists = await fetchTopArtists(session);
-    await kv.set("topArtists", topArtists, { ex: 3600 });
+    await kv.set(getUserKey("topArtists"), topArtists, { ex: 3600 });
   }
 
-  let recommendedTracks = await kv.get<Track[]>("recommendedTracks");
+  let recommendedTracks = await kv.get<Track[]>(
+    getUserKey("recommendedTracks"),
+  );
   if (!recommendedTracks) {
     recommendedTracks = await fetchRecommendations(session, songs, topArtists);
-    await kv.set("recommendedTracks", recommendedTracks, { ex: 3600 });
+    await kv.set(getUserKey("recommendedTracks"), recommendedTracks, {
+      ex: 3600,
+    });
   }
 
   return (
