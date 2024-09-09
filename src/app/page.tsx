@@ -47,7 +47,7 @@ export default async function HomePage() {
     <>
       <TopTracks items={songs.items} />
       <TopArtists items={topArtists.items} />
-      <GetRecommendations recommendedTracks={recommendedTracks} />
+      <GetRecommendations items={recommendedTracks} />
     </>
   );
 }
