@@ -19,13 +19,16 @@ export const env = createEnv({
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL ?? str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL ? z.string() : z.string().url()
+      process.env.VERCEL ? z.string() : z.string().url(),
     ),
     SPOTIFY_CLIENT_ID: z.string(),
     SPOTIFY_CLIENT_SECRET: z.string(),
     SPOTIFY_REDIRECT_URI: z.string(),
     SPOTIFY_DEVELOPMENT_REDIRECT_URI: z.string(),
     NEXT_PRODUCTION_URL: z.string(),
+    REDIS_PW: z.string(),
+    REDIS_HOST: z.string(),
+    REDIS_PORT: z.string(),
   },
 
   /**
@@ -45,12 +48,15 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
-    SPOTIFY_DEVELOPMENT_REDIRECT_URI: process.env.SPOTIFY_DEVELOPMENT_REDIRECT_URI,
+    SPOTIFY_DEVELOPMENT_REDIRECT_URI:
+      process.env.SPOTIFY_DEVELOPMENT_REDIRECT_URI,
     NEXT_PRODUCTION_URL: process.env.NEXT_PRODUCTION_URL,
+    REDIS_PW: process.env.REDIS_PW,
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
