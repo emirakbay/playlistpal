@@ -5,6 +5,7 @@ import {
   type RecentlyPlayedTracksPage,
   type Recommendations,
   type Track,
+  type UserProfile,
 } from "~/types/spotify-types";
 
 export const fetchTopSongs = async (session: Session) => {
@@ -112,5 +113,16 @@ export const fetchRecentlyPlayed = async (session: Session) => {
   );
 
   const data = (await res.json()) as RecentlyPlayedTracksPage;
+  return data;
+};
+
+export const fetchProfile = async (session: Session) => {
+  const res = await fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      Authorization: `Bearer ${session.user.access_token}`,
+    },
+  });
+
+  const data = (await res.json()) as UserProfile;
   return data;
 };

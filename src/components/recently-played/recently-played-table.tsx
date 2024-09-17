@@ -69,7 +69,7 @@ export function RecentlyPlayedTable(props: Props) {
   }, [data, props.data, table]);
 
   return (
-    <div className="mx-auto w-[350px] pt-2 md:mx-0 md:w-[700px] md:pl-2">
+    <>
       <div className="text-base">Last Played 50</div>
       <p>Offline sessions are not tracked.</p>
       <div className="flex items-center py-4">
@@ -104,22 +104,24 @@ export function RecentlyPlayedTable(props: Props) {
         </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className="w-full table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} className="text-center">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.slice(1).map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="text-center text-white"
+                    style={{ width: "150px" }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -134,14 +136,21 @@ export function RecentlyPlayedTable(props: Props) {
                     window.open(row.original.track.external_urls.spotify);
                   }}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-center">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                  {row
+                    .getVisibleCells()
+                    .slice(1)
+                    .map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="max-w-[150px] truncate text-center md:max-w-none"
+                        style={{ width: "150px" }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
                 </TableRow>
               ))
             ) : (
@@ -177,6 +186,6 @@ export function RecentlyPlayedTable(props: Props) {
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

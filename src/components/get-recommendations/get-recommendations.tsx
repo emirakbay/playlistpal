@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import { useScroll } from "~/hooks/use-scroll";
 import { type Track } from "~/types/spotify-types";
 import { FeaturedSlider } from "../album-artwork";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { useScroll } from "~/hooks/use-scroll";
 
 export default function GetRecommendations(recommendedTracks: {
   items: Track[] | null;
@@ -20,7 +20,7 @@ export default function GetRecommendations(recommendedTracks: {
             onScrollStart={() => setIsScrolling(true)}
             onScrollEnd={() => setIsScrolling(false)}
           >
-            <div className="flex space-x-8 pb-4 pt-2">
+            <div className="flex space-x-4 pb-4 pt-2">
               {recommendedTracks.items
                 ?.filter((album) => album !== null)
                 .map((album: Track, index: number) => (
