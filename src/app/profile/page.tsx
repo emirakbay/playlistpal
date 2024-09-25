@@ -1,9 +1,14 @@
 import { User } from "lucide-react";
 import { redirect } from "next/navigation";
+import FollowedArtists from "~/components/followed-artists/followed-artists";
 import { RecentlyPlayedTable } from "~/components/recently-played/recently-played-table";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { getServerAuthSession } from "~/server/auth";
-import { fetchProfile, fetchRecentlyPlayed } from "../api/spotify-service";
+import {
+  fetchAllFollowedArtists,
+  fetchProfile,
+  fetchRecentlyPlayed,
+} from "../api/spotify-service";
 
 export default async function ProfilePage() {
   const session = await getServerAuthSession();
@@ -14,10 +19,11 @@ export default async function ProfilePage() {
 
   const history = await fetchRecentlyPlayed(session);
   const profile = await fetchProfile(session);
+  const followedArtists = await fetchAllFollowedArtists(session);
 
   return (
     <div className="container mx-auto p-6 text-white">
-      <div className="flex flex-col gap-8 md:flex-row">
+      <div className="flex flex-col gap-8 md:flex-row md:items-center">
         <div className="rounded-lg p-6 md:w-1/3">
           <div className="flex flex-col items-center text-center">
             <Avatar className="mb-4 h-64 w-64">
@@ -44,11 +50,14 @@ export default async function ProfilePage() {
             </div>
           </div>
         </div>
-        <div className="md:w-2/3">
-          <h3 className="mb-4 text-xl font-bold">Recently Played</h3>
-          <RecentlyPlayedTable data={history.items} />
+        <div className="flex items-center md:w-2/3">
+          <div className="w-full">
+            <h3 className="mb-4 text-xl font-bold">Recently Played</h3>
+            <RecentlyPlayedTable data={history.items} />
+          </div>
         </div>
       </div>
+      <FollowedArtists items={followedArtists} />
     </div>
   );
 }

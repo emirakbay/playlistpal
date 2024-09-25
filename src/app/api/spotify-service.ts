@@ -2,6 +2,7 @@ import { type Session } from "next-auth";
 import {
   type Artist,
   type FeaturedPlaylists,
+  type FollowedArtists,
   type RecentlyPlayedTracksPage,
   type Recommendations,
   type Track,
@@ -125,4 +126,24 @@ export const fetchProfile = async (session: Session) => {
 
   const data = (await res.json()) as UserProfile;
   return data;
+};
+
+export const fetchAllFollowedArtists = async (session: Session) => {
+  let allArtists: Artist[] = [];
+  let nextUrl = `https://api.spotify.com/v1/me/following?type=artist&limit=50`;
+
+  while (nextUrl) {
+    const res = await fetch(nextUrl, {
+      headers: {
+        Authorization: `Bearer ${session.user.access_token}`,
+      },
+    });
+
+    const data = (await res.json()) as FollowedArtists;
+
+    allArtists = allArtists.concat(data.artists.items);
+    nextUrl = data.artists.next!;
+  }
+
+  return allArtists;
 };
