@@ -1,7 +1,6 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { type Session } from "next-auth";
 import { Menu } from "~/components/top-bar";
 import { NextAuthProvider } from "~/providers";
 
@@ -17,7 +16,7 @@ export default function RootLayout({
   session,
 }: {
   children: React.ReactNode;
-  session: Session;
+  session: never;
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
