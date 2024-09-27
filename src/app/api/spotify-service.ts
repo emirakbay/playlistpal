@@ -3,6 +3,8 @@ import {
   type Artist,
   type FeaturedPlaylists,
   type FollowedArtists,
+  type Page,
+  type Playlist,
   type RecentlyPlayedTracksPage,
   type Recommendations,
   type Track,
@@ -69,31 +71,18 @@ export const fetchRecommendations = async (
     .slice(0, 3)
     .flatMap((artist) => artist.genres);
 
+  const fetchRecommendations = async (index: number) => {
+    const url = `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[index]}&seed_tracks=${topThreeSongs[index]}&seed_genres=${topThreeArtistsGenres[index]}`;
+    const headers = {
+      Authorization: `Bearer ${session.user.access_token}`,
+    };
+    return fetch(url, { headers });
+  };
+
   const res = await Promise.all([
-    fetch(
-      `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[0]}&seed_tracks=${topThreeSongs[0]}&seed_genres=${topThreeArtistsGenres[0]}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.access_token}`,
-        },
-      },
-    ),
-    fetch(
-      `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[1]}&seed_tracks=${topThreeSongs[1]}&seed_genres=${topThreeArtistsGenres[1]}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.access_token}`,
-        },
-      },
-    ),
-    fetch(
-      `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[2]}&seed_tracks=${topThreeSongs[2]}&seed_genres=${topThreeArtistsGenres[2]}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.access_token}`,
-        },
-      },
-    ),
+    fetchRecommendations(0),
+    fetchRecommendations(1),
+    fetchRecommendations(2),
   ]);
 
   const data = (await Promise.all(
@@ -146,4 +135,37 @@ export const fetchAllFollowedArtists = async (session: Session) => {
   }
 
   return allArtists;
+};
+
+export const fetchUserOwnedPlaylists = async (session: Session) => {
+  let allPlaylists: Playlist[] = [];
+  let nextUrl = `https://api.spotify.com/v1/me/playlists?limit=50&offset=0`;
+
+  while (nextUrl) {
+    try {
+      const res = await fetch(nextUrl, {
+        headers: {
+          Authorization: `Bearer ${session.user.access_token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error fetching playlists: ${res.statusText}`);
+      }
+
+      const data = (await res.json()) as Page<Playlist>;
+
+      allPlaylists = allPlaylists.concat(data.items);
+      nextUrl = data.next!;
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+      return [];
+    }
+  }
+
+  const ownedPlaylists = allPlaylists.filter(
+    (playlist) => playlist.owner.id === session.user.name,
+  );
+
+  return ownedPlaylists;
 };

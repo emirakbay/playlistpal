@@ -937,7 +937,7 @@ export interface SnapshotReference {
   snapshot_id: string;
 }
 
-interface PlaylistBase {
+export interface PlaylistBase {
   collaborative: boolean;
   description: string;
   external_urls: ExternalUrls;
