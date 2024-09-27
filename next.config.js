@@ -17,6 +17,7 @@ const config = {
         hostname: "**.spotifycdn.com",
       },
     ],
+    unoptimized: true,
   },
 };
 
