@@ -30,7 +30,7 @@ export const fetchFeaturedPlaylists = async (
   session: Session,
 ): Promise<FeaturedPlaylists> => {
   const res = await fetch(
-    `https://api.spotify.com/v1/browse/featured-playlists?limit=25`,
+    `https://api.spotify.com/v1/browse/featured-playlists?limit=50`,
     {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -168,4 +168,37 @@ export const fetchUserOwnedPlaylists = async (session: Session) => {
   );
 
   return ownedPlaylists;
+};
+
+export const fetchLikedPlaylists = async (session: Session) => {
+  let allPlaylists: Playlist[] = [];
+  let nextUrl = `https://api.spotify.com/v1/me/playlists?limit=50&offset=0`;
+
+  while (nextUrl) {
+    try {
+      const res = await fetch(nextUrl, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error fetching playlists: ${res.statusText}`);
+      }
+
+      const data = (await res.json()) as Page<Playlist>;
+
+      allPlaylists = allPlaylists.concat(data.items);
+      nextUrl = data.next!;
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+      return [];
+    }
+  }
+
+  const likedPlaylists = allPlaylists.filter(
+    (playlist) => playlist.owner.id !== session.user.id,
+  );
+
+  return likedPlaylists;
 };
