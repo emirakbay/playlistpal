@@ -16,7 +16,7 @@ export const fetchTopSongs = async (session: Session) => {
     `https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50`,
     {
       headers: {
-        Authorization: `Bearer ${session.user.access_token}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
     },
   );
@@ -33,7 +33,7 @@ export const fetchFeaturedPlaylists = async (
     `https://api.spotify.com/v1/browse/featured-playlists?limit=25`,
     {
       headers: {
-        Authorization: `Bearer ${session.user.access_token}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
     },
   );
@@ -48,7 +48,7 @@ export const fetchTopArtists = async (session: Session) => {
     `https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50`,
     {
       headers: {
-        Authorization: `Bearer ${session.user.access_token}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
     },
   );
@@ -74,7 +74,7 @@ export const fetchRecommendations = async (
   const fetchRecommendations = async (index: number) => {
     const url = `https://api.spotify.com/v1/recommendations?limit=8&seed_artists=${topThreeArtists[index]}&seed_tracks=${topThreeSongs[index]}&seed_genres=${topThreeArtistsGenres[index]}`;
     const headers = {
-      Authorization: `Bearer ${session.user.access_token}`,
+      Authorization: `Bearer ${session.accessToken}`,
     };
     return fetch(url, { headers });
   };
@@ -97,7 +97,7 @@ export const fetchRecentlyPlayed = async (session: Session) => {
     `https://api.spotify.com/v1/me/player/recently-played?limit=50&before=${Date.now()}`,
     {
       headers: {
-        Authorization: `Bearer ${session.user.access_token}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
     },
   );
@@ -109,7 +109,7 @@ export const fetchRecentlyPlayed = async (session: Session) => {
 export const fetchProfile = async (session: Session) => {
   const res = await fetch("https://api.spotify.com/v1/me", {
     headers: {
-      Authorization: `Bearer ${session.user.access_token}`,
+      Authorization: `Bearer ${session.accessToken}`,
     },
   });
 
@@ -124,7 +124,7 @@ export const fetchAllFollowedArtists = async (session: Session) => {
   while (nextUrl) {
     const res = await fetch(nextUrl, {
       headers: {
-        Authorization: `Bearer ${session.user.access_token}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
     });
 
@@ -145,7 +145,7 @@ export const fetchUserOwnedPlaylists = async (session: Session) => {
     try {
       const res = await fetch(nextUrl, {
         headers: {
-          Authorization: `Bearer ${session.user.access_token}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
       });
 
@@ -164,7 +164,7 @@ export const fetchUserOwnedPlaylists = async (session: Session) => {
   }
 
   const ownedPlaylists = allPlaylists.filter(
-    (playlist) => playlist.owner.id === session.user.name,
+    (playlist) => playlist.owner.id === session.user.id,
   );
 
   return ownedPlaylists;
