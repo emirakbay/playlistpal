@@ -23,7 +23,7 @@ export default function FollowedArtists(artists: { items: Artist[] }) {
                 album={{
                   name: artist.name,
                   artist: artist.name,
-                  cover: artist.images[2]?.url,
+                  cover: artist.images[0]?.url,
                   order: index + 1,
                 }}
                 className="w-[150px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"

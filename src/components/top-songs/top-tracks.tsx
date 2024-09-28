@@ -24,7 +24,7 @@ export default function TopTracks(tracks: { items: Track[] }) {
                 album={{
                   name: album.name,
                   artist: album.artists[0]?.name,
-                  cover: album.album.images[1]?.url,
+                  cover: album.album.images[0]?.url,
                   order: index + 1,
                 }}
                 className="w-[150px] lg:h-[230px] lg:w-[150px] lg:rounded-md lg:object-cover lg:transition-all lg:hover:scale-105"
