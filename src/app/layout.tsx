@@ -1,9 +1,9 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { Menu } from "~/components/top-bar";
+import Footer from "~/components/footer/page";
+import Menu from "~/components/top-bar";
 import { NextAuthProvider } from "~/providers";
-import { getServerAuthSession } from "~/server/auth";
 
 export const metadata = {
   title: "playlistpal",
@@ -19,13 +19,13 @@ export default async function RootLayout({
   children: React.ReactNode;
   session: never;
 }) {
-  const serverAuthSession = await getServerAuthSession();
   return (
     <html lang="en" className={`${GeistSans.variable} scroll-smooth`}>
       <NextAuthProvider session={session}>
-        <body className="min-h-screen items-center bg-slate-900 text-white sm:flex-col lg:flex-row">
-          {serverAuthSession && <Menu />}
+        <body className="min-h-screen items-center bg-black text-white sm:flex-col lg:flex-row">
+          <Menu />
           {children}
+          <Footer />
         </body>
       </NextAuthProvider>
     </html>

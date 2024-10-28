@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({
@@ -8,8 +8,16 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
   const isAuthPage = request.nextUrl.pathname.startsWith("/auth");
+  const isPrivacyPolicyPage = request.nextUrl.pathname === "/privacy-policy";
+  const isTermsOfServicePage = request.nextUrl.pathname === "/terms-of-service";
+  const isCookiePolicyPage = request.nextUrl.pathname === "/cookie-policy";
 
-  if (request.nextUrl.pathname === "/") {
+  if (
+    request.nextUrl.pathname === "/" ||
+    isPrivacyPolicyPage ||
+    isTermsOfServicePage ||
+    isCookiePolicyPage
+  ) {
     return NextResponse.next();
   }
 
@@ -26,6 +34,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|playlistpal.png|spotify-logo.svg).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|playlistpal.png|spotify-logo.svg|musical_symbols__notes.glb).*)",
   ],
 };

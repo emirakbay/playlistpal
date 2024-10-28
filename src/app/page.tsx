@@ -1,4 +1,5 @@
 import GetRecommendations from "~/components/get-recommendations/get-recommendations";
+import LandingPage from "~/components/landing-page/landing-page";
 import TopArtists from "~/components/top-artists/top-artists";
 import TopTracks from "~/components/top-songs/top-tracks";
 import { closeClient, getClient } from "~/db/db";
@@ -10,7 +11,6 @@ import {
   fetchTopArtists,
   fetchTopSongs,
 } from "./api/spotify-service";
-import LandingPage from "~/components/landing-page/landing-page";
 
 export default async function Page() {
   const session = await getServerAuthSession();
@@ -75,9 +75,9 @@ export default async function Page() {
 
   return session ? (
     <div>
+      <GetRecommendations items={recommendedTracksData} />
       <TopTracks items={topSongsData.items} />
       <TopArtists items={topArtistsData.items} />
-      <GetRecommendations items={recommendedTracksData} />
     </div>
   ) : (
     <LandingPage />
