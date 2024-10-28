@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import GetRecommendations from "~/components/get-recommendations/get-recommendations";
+import LandingPage from "~/components/landing-page/landing-page";
 import TopArtists from "~/components/top-artists/top-artists";
 import TopTracks from "~/components/top-songs/top-tracks";
 import { closeClient, getClient } from "~/db/db";
@@ -12,69 +12,74 @@ import {
   fetchTopSongs,
 } from "./api/spotify-service";
 
-export default async function HomePage() {
+export default async function Page() {
   const session = await getServerAuthSession();
 
-  if (!session) {
-    redirect("/api/auth/signin");
-  }
+  let topSongsData: { items: Track[] } = { items: [] };
+  let topArtistsData: { items: Artist[] } = { items: [] };
+  let recommendedTracksData: Track[] = [];
 
-  const providerAccountId = session.user.name;
-  const getUserKey = (key: string) => `user:${providerAccountId}:${key}`;
+  if (session) {
+    const providerAccountId = session.user.name;
+    const getUserKey = (key: string) => `user:${providerAccountId}:${key}`;
 
-  const client = await getClient();
+    const client = await getClient();
 
-  const topSongs = await client.get(getUserKey("topSongs"));
-  let topSongsData: { items: Track[] };
-  if (topSongs) {
-    topSongsData = JSON.parse(topSongs) as { items: Track[] };
-  } else {
-    topSongsData = await fetchTopSongs(session);
-    sanitizeTopSongsData(topSongsData);
-    await client.set(getUserKey("topSongs"), JSON.stringify(topSongsData), {
-      EX: 3600,
-    });
-  }
-
-  const topArtists = await client.get(getUserKey("topArtists"));
-  let topArtistsData: { items: Artist[] };
-  if (topArtists) {
-    topArtistsData = JSON.parse(topArtists) as { items: Artist[] };
-  } else {
-    topArtistsData = await fetchTopArtists(session);
-    await client.set(getUserKey("topArtists"), JSON.stringify(topArtistsData), {
-      EX: 3600,
-    });
-  }
-
-  const recommendedTracks = await client.get(getUserKey("recommendedTracks"));
-  let recommendedTracksData: Track[];
-
-  if (recommendedTracks) {
-    recommendedTracksData = JSON.parse(recommendedTracks) as Track[];
-  } else {
-    recommendedTracksData = await fetchRecommendations(
-      session,
-      topSongsData,
-      topArtistsData,
-    );
-    sanitizeTopSongsData(recommendedTracksData);
-    await client.set(
-      getUserKey("recommendedTracks"),
-      JSON.stringify(recommendedTracksData),
-      {
+    const topSongs = await client.get(getUserKey("topSongs"));
+    if (topSongs) {
+      topSongsData = JSON.parse(topSongs) as { items: Track[] };
+    } else {
+      topSongsData = await fetchTopSongs(session);
+      sanitizeTopSongsData(topSongsData);
+      await client.set(getUserKey("topSongs"), JSON.stringify(topSongsData), {
         EX: 3600,
-      },
-    );
+      });
+    }
+
+    const topArtists = await client.get(getUserKey("topArtists"));
+    if (topArtists) {
+      topArtistsData = JSON.parse(topArtists) as { items: Artist[] };
+    } else {
+      topArtistsData = await fetchTopArtists(session);
+      await client.set(
+        getUserKey("topArtists"),
+        JSON.stringify(topArtistsData),
+        {
+          EX: 3600,
+        },
+      );
+    }
+
+    const recommendedTracks = await client.get(getUserKey("recommendedTracks"));
+
+    if (recommendedTracks) {
+      recommendedTracksData = JSON.parse(recommendedTracks) as Track[];
+    } else {
+      recommendedTracksData = await fetchRecommendations(
+        session,
+        topSongsData,
+        topArtistsData,
+      );
+      sanitizeTopSongsData(recommendedTracksData);
+      await client.set(
+        getUserKey("recommendedTracks"),
+        JSON.stringify(recommendedTracksData),
+        {
+          EX: 3600,
+        },
+      );
+    }
+
+    await closeClient();
   }
 
-  await closeClient();
-
-  return (
-    <>
+  return session ? (
+    <div>
+      <GetRecommendations items={recommendedTracksData} />
       <TopTracks items={topSongsData.items} />
       <TopArtists items={topArtistsData.items} />
-      <GetRecommendations items={recommendedTracksData} />
-    </>
+    </div>
+  ) : (
+    <LandingPage />
   );
 }

@@ -28,7 +28,7 @@ export default async function ProfilePage() {
           <div className="flex flex-col items-center text-center">
             <Avatar className="mb-4 h-64 w-64">
               <AvatarImage
-                src={profile.images[1]?.url}
+                src={profile.images[0]?.url}
                 alt={profile.display_name}
               />
               <AvatarFallback>

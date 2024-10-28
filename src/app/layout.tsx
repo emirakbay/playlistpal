@@ -1,7 +1,8 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { Menu } from "~/components/top-bar";
+import Footer from "~/components/footer/page";
+import Menu from "~/components/top-bar";
 import { NextAuthProvider } from "~/providers";
 
 export const metadata = {
@@ -11,7 +12,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.png" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   session,
 }: {
@@ -19,13 +20,12 @@ export default function RootLayout({
   session: never;
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} scroll-smooth`}>
       <NextAuthProvider session={session}>
-        <body>
+        <body className="min-h-screen items-center bg-black text-white sm:flex-col lg:flex-row">
           <Menu />
-          <section className="min-h-screen items-center bg-slate-900 text-white sm:flex-col lg:flex-row">
-            {children}
-          </section>
+          {children}
+          <Footer />
         </body>
       </NextAuthProvider>
     </html>
