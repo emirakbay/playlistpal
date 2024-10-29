@@ -11,7 +11,7 @@ export default function TopArtists(topArtists: { items: Artist[] }) {
 
   return (
     <section className="flex h-1/3 flex-col gap-2 px-4 pt-2 sm:h-2/5 sm:gap-3 sm:px-12 sm:pt-3">
-      <span className="">Top Artists Lately</span>
+      <span className="text-base sm:text-lg">Top Artists Lately</span>
       <div className="relative">
         <ScrollArea
           onScrollStart={() => setIsScrolling(true)}
