@@ -48,8 +48,8 @@ function Scene() {
   const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh[]>([]);
   const targetPositions = useRef<[number, number, number][]>([
-    [-30, 0, 0],
-    [20, 0, 0],
+    [-20, 0, 0],
+    [30, 0, 0],
   ]);
 
   useFrame((state, delta) => {
