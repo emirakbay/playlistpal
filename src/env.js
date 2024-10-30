@@ -29,6 +29,8 @@ export const env = createEnv({
     REDIS_PW: z.string(),
     REDIS_HOST: z.string(),
     REDIS_PORT: z.string(),
+    ENCRYPTION_KEY: z.string(),
+    ENCRYPTION_SALT: z.string(),
   },
 
   /**
@@ -57,6 +59,8 @@ export const env = createEnv({
     REDIS_PW: process.env.REDIS_PW,
     REDIS_HOST: process.env.REDIS_HOST,
     REDIS_PORT: process.env.REDIS_PORT,
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
+    ENCRYPTION_SALT: process.env.ENCRYPTION_SALT,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
