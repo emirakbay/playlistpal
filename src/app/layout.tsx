@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import Footer from "~/components/footer/page";
-import Menu from "~/components/top-bar";
+import Menu from "~/components/menu";
 import { NextAuthProvider } from "~/providers";
 
 export const metadata = {
