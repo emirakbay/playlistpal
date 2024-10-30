@@ -10,10 +10,12 @@ import {
   type Track,
   type UserProfile,
 } from "~/types/spotify-types";
+import { type TimeRange } from "~/types/types";
 
-export const fetchTopSongs = async (session: Session) => {
+export const fetchTopSongs = async (session: Session, timeRange: TimeRange) => {
+  console.log(timeRange);
   const res = await fetch(
-    `https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50`,
+    `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=50`,
     {
       headers: {
         Authorization: `Bearer ${session.accessToken}`,

@@ -5,6 +5,7 @@ import TopTracks from "~/components/top-songs/top-tracks";
 import { closeClient, getClient } from "~/db/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type Artist, type Track } from "~/types/spotify-types";
+import { decrypt, encrypt } from "~/utils/encryption";
 import { sanitizeTopSongsData } from "~/utils/sanitize-data";
 import {
   fetchRecommendations,
@@ -27,23 +28,29 @@ export default async function Page() {
 
     const topSongs = await client.get(getUserKey("topSongs"));
     if (topSongs) {
-      topSongsData = JSON.parse(topSongs) as { items: Track[] };
+      topSongsData = JSON.parse(await decrypt(topSongs)) as { items: Track[] };
     } else {
-      topSongsData = await fetchTopSongs(session);
+      topSongsData = await fetchTopSongs(session, "short_term");
       sanitizeTopSongsData(topSongsData);
-      await client.set(getUserKey("topSongs"), JSON.stringify(topSongsData), {
-        EX: 3600,
-      });
+      await client.set(
+        getUserKey("topSongs"),
+        await encrypt(JSON.stringify(topSongsData)),
+        {
+          EX: 3600,
+        },
+      );
     }
 
     const topArtists = await client.get(getUserKey("topArtists"));
     if (topArtists) {
-      topArtistsData = JSON.parse(topArtists) as { items: Artist[] };
+      topArtistsData = JSON.parse(await decrypt(topArtists)) as {
+        items: Artist[];
+      };
     } else {
       topArtistsData = await fetchTopArtists(session);
       await client.set(
         getUserKey("topArtists"),
-        JSON.stringify(topArtistsData),
+        await encrypt(JSON.stringify(topArtistsData)),
         {
           EX: 3600,
         },
@@ -53,7 +60,9 @@ export default async function Page() {
     const recommendedTracks = await client.get(getUserKey("recommendedTracks"));
 
     if (recommendedTracks) {
-      recommendedTracksData = JSON.parse(recommendedTracks) as Track[];
+      recommendedTracksData = JSON.parse(
+        await decrypt(recommendedTracks),
+      ) as Track[];
     } else {
       recommendedTracksData = await fetchRecommendations(
         session,
@@ -63,7 +72,7 @@ export default async function Page() {
       sanitizeTopSongsData(recommendedTracksData);
       await client.set(
         getUserKey("recommendedTracks"),
-        JSON.stringify(recommendedTracksData),
+        await encrypt(JSON.stringify(recommendedTracksData)),
         {
           EX: 3600,
         },
