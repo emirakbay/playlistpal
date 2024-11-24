@@ -13,7 +13,7 @@ import {
 import { type TimeRange } from "~/types/types";
 
 export const fetchTopSongs = async (session: Session, timeRange: TimeRange) => {
-  console.log(timeRange);
+  console.log("fetchTopSongs");
   const res = await fetch(
     `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=50`,
     {

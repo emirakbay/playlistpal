@@ -70,8 +70,8 @@ export function RecentlyPlayedTable(props: Props) {
 
   return (
     <>
-      <div className="text-base">Last Played 50</div>
-      <p>Offline sessions are not tracked.</p>
+      <div className="text-center text-base">Last Played 50</div>
+      <p className="text-center">Offline sessions are not tracked.</p>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter by track name"
@@ -79,7 +79,7 @@ export function RecentlyPlayedTable(props: Props) {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm mx-auto"
         />
         <DropdownMenu>
           <DropdownMenuContent align="end">
