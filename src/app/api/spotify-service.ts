@@ -166,7 +166,7 @@ export const fetchUserOwnedPlaylists = async (session: Session) => {
   }
 
   const ownedPlaylists = allPlaylists.filter(
-    (playlist) => playlist.owner.id === session.user.id,
+    (playlist) => playlist?.owner?.id === session.user.id,
   );
 
   return ownedPlaylists;
@@ -199,7 +199,7 @@ export const fetchLikedPlaylists = async (session: Session) => {
   }
 
   const likedPlaylists = allPlaylists.filter(
-    (playlist) => playlist.owner.id !== session.user.id,
+    (playlist) => playlist?.owner?.id !== session.user.id,
   );
 
   return likedPlaylists;

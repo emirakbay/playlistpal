@@ -11,22 +11,21 @@ export default function DisplayPlaylists({
   playlistsType,
 }: {
   items: Playlist[] | SimplifiedPlaylist[];
-  playlistsType: "owned" | "liked" | "featured";
+  playlistsType: "owned" | "liked";
 }) {
   const { isScrolling, setIsScrolling } = useScroll();
 
-  const uniqueItems = items.filter(
-    (item, index, self) => index === self.findIndex((t) => t.id === item.id),
-  );
+  const uniqueItems = items
+    .filter((item): item is (Playlist | SimplifiedPlaylist) => item != null)
+    .filter(
+      (item, index, self) => 
+        index === self.findIndex((t) => t?.id === item.id)
+    );
 
   return (
     <section className="flex h-1/3 flex-col gap-2 px-4 pt-2 sm:h-2/5 sm:gap-3 sm:px-12 sm:pt-3">
       <span className="text-base sm:text-lg">
-        {playlistsType === "featured"
-          ? "Featured Playlists"
-          : playlistsType === "owned"
-            ? "Owned Playlists"
-            : "Liked Playlists"}
+        {playlistsType === "owned" ? "Owned Playlists" : "Liked Playlists"}
       </span>
       <div className="relative">
         <ScrollArea

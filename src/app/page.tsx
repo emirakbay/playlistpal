@@ -18,7 +18,7 @@ export default async function Page() {
 
   let topSongsData: { items: Track[] } = { items: [] };
   let topArtistsData: { items: Artist[] } = { items: [] };
-  let recommendedTracksData: Track[] = [];
+  // let recommendedTracksData: Track[] = [];
 
   if (session) {
     const providerAccountId = session.user.name;
@@ -57,34 +57,34 @@ export default async function Page() {
       );
     }
 
-    const recommendedTracks = await client.get(getUserKey("recommendedTracks"));
+    // const recommendedTracks = await client.get(getUserKey("recommendedTracks"));
 
-    if (recommendedTracks) {
-      recommendedTracksData = JSON.parse(
-        await decrypt(recommendedTracks),
-      ) as Track[];
-    } else {
-      recommendedTracksData = await fetchRecommendations(
-        session,
-        topSongsData,
-        topArtistsData,
-      );
-      sanitizeTopSongsData(recommendedTracksData);
-      await client.set(
-        getUserKey("recommendedTracks"),
-        await encrypt(JSON.stringify(recommendedTracksData)),
-        {
-          EX: 3600,
-        },
-      );
-    }
+    // if (recommendedTracks) {
+    //   recommendedTracksData = JSON.parse(
+    //     await decrypt(recommendedTracks),
+    //   ) as Track[];
+    // } else {
+    //   recommendedTracksData = await fetchRecommendations(
+    //     session,
+    //     topSongsData,
+    //     topArtistsData,
+    //   );
+    //   sanitizeTopSongsData(recommendedTracksData);
+    //   await client.set(
+    //     getUserKey("recommendedTracks"),
+    //     await encrypt(JSON.stringify(recommendedTracksData)),
+    //     {
+    //       EX: 3600,
+    //     },
+    //   );
+    // }
 
     await closeClient();
   }
 
   return session ? (
     <div className="flex min-h-screen flex-col gap-6 p-4">
-      <GetRecommendations items={recommendedTracksData} />
+      {/* <GetRecommendations items={recommendedTracksData} /> */}
       <TopTracks items={topSongsData.items} />
       <TopArtists items={topArtistsData.items} />
     </div>

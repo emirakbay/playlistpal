@@ -3,7 +3,6 @@ import React from "react";
 import DisplayPlaylists from "~/components/user-playlists/display-playlists";
 import { getServerAuthSession } from "~/server/auth";
 import {
-  fetchFeaturedPlaylists,
   fetchLikedPlaylists,
   fetchUserOwnedPlaylists,
 } from "../api/spotify-service";
@@ -17,21 +16,14 @@ export default async function Page() {
 
   const ownedPlaylists = await fetchUserOwnedPlaylists(session);
   const likedPlaylists = await fetchLikedPlaylists(session);
-  const featuredPlaylists = await fetchFeaturedPlaylists(session);
 
   return (
     <>
-      {["owned", "liked", "featured"].map((type) => (
+      {["owned", "liked"].map((type) => (
         <DisplayPlaylists
           key={type}
-          items={
-            type === "owned"
-              ? ownedPlaylists
-              : type === "liked"
-                ? likedPlaylists
-                : featuredPlaylists.playlists.items
-          }
-          playlistsType={type as "owned" | "liked" | "featured"}
+          items={type === "owned" ? ownedPlaylists : likedPlaylists}
+          playlistsType={type as "owned" | "liked"}
         />
       ))}
     </>
