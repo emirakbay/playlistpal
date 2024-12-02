@@ -83,7 +83,7 @@ export default async function Page() {
   }
 
   return session ? (
-    <div>
+    <div className="flex min-h-screen flex-col gap-6 p-4">
       <GetRecommendations items={recommendedTracksData} />
       <TopTracks items={topSongsData.items} />
       <TopArtists items={topArtistsData.items} />
