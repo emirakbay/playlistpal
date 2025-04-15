@@ -18,7 +18,7 @@ export default async function Page() {
   const likedPlaylists = await fetchLikedPlaylists(session);
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col gap-6 p-4">
       {["owned", "liked"].map((type) => (
         <DisplayPlaylists
           key={type}
@@ -26,6 +26,6 @@ export default async function Page() {
           playlistsType={type as "owned" | "liked"}
         />
       ))}
-    </>
+    </div>
   );
 }

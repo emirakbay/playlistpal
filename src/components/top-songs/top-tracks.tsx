@@ -4,7 +4,7 @@ import React from "react";
 import { useScroll } from "~/hooks/use-scroll";
 import { type Track } from "~/types/spotify-types";
 import { type TimeRangeData } from "~/types/types";
-import { FeaturedSlider } from "../album-artwork";
+import { FeaturedSlider } from "../featured-slider";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
@@ -24,23 +24,25 @@ export function TopTracks({ items }: TopTracksProps) {
   function renderTrackList(tracks: Track[]) {
     return (
       <div className="flex space-x-3 pb-3 pt-2 sm:space-x-5 sm:pb-5 sm:pt-3">
-        {tracks.map((album: Track, index: number) => (
+        {tracks.map((track: Track, index: number) => (
           <FeaturedSlider
-            key={album.id}
+            key={track.id}
             album={{
-              name: album.name,
-              artist: album.artists[0]?.name,
-              cover: album.album.images[0]?.url,
+              name: track.name,
+              artist: track.artists[0]?.name,
+              cover: track.album.images[0]?.url,
               order: index + 1,
             }}
             className="w-[120px] sm:w-[180px] lg:h-[260px] lg:w-[180px] lg:rounded-lg lg:object-cover lg:transition-all lg:hover:scale-105"
             aspectRatio="square"
             width={180}
             height={240}
-            externalUrl={album.external_urls.spotify}
-            uri={album.uri}
+            externalUrl={track.external_urls.spotify}
+            uri={track.uri}
             displayArtist={true}
             isScrolling={isScrolling}
+            type="track"
+            id={track.id}
           />
         ))}
       </div>

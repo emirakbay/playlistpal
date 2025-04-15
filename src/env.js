@@ -31,6 +31,9 @@ export const env = createEnv({
     REDIS_PORT: z.string(),
     ENCRYPTION_KEY: z.string(),
     ENCRYPTION_SALT: z.string(),
+    GENIUS_CLIENT_ID: z.string(),
+    GENIUS_CLIENT_SECRET: z.string(),
+    GENIUS_ACCESS_TOKEN: z.string(),
   },
 
   /**
@@ -61,6 +64,9 @@ export const env = createEnv({
     REDIS_PORT: process.env.REDIS_PORT,
     ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
     ENCRYPTION_SALT: process.env.ENCRYPTION_SALT,
+    GENIUS_CLIENT_ID: process.env.GENIUS_CLIENT_ID,
+    GENIUS_CLIENT_SECRET: process.env.GENIUS_CLIENT_SECRET,
+    GENIUS_ACCESS_TOKEN: process.env.GENIUS_ACCESS_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

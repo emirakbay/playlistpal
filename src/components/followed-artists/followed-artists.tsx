@@ -3,7 +3,7 @@
 import React from "react";
 import { useScroll } from "~/hooks/use-scroll";
 import { type Artist } from "~/types/spotify-types";
-import { FeaturedSlider } from "../album-artwork";
+import { FeaturedSlider } from "../featured-slider";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function FollowedArtists(artists: { items: Artist[] }) {
@@ -20,6 +20,8 @@ export default function FollowedArtists(artists: { items: Artist[] }) {
             {artists.items.map((artist: Artist, index: number) => (
               <FeaturedSlider
                 key={index}
+                type="artist"
+                id={artist.id}
                 album={{
                   name: artist.name,
                   artist: artist.name,

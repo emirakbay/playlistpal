@@ -4,7 +4,7 @@ import React from "react";
 import { useScroll } from "~/hooks/use-scroll";
 import { type Artist } from "~/types/spotify-types";
 import { type TimeRangeData } from "~/types/types";
-import { FeaturedSlider } from "../album-artwork";
+import { FeaturedSlider } from "../featured-slider";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
@@ -58,6 +58,8 @@ export function TopArtists({ items }: TopArtistsProps) {
                       uri={artist.uri}
                       displayArtist={true}
                       isScrolling={isScrolling}
+                      type="artist"
+                      id={artist.id}
                     />
                   ))}
                 </div>

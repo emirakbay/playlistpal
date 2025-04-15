@@ -1,6 +1,6 @@
 "use client";
 
-import { FeaturedSlider } from "~/components/album-artwork";
+import { FeaturedSlider } from "~/components/featured-slider";
 import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 import { useScroll } from "~/hooks/use-scroll";
 import { type Artist } from "~/types/spotify-types";
@@ -20,6 +20,8 @@ export function ArtistGrid({ artists }: { artists: Artist[] }) {
             {artists.map((artist, index) => (
               <FeaturedSlider
                 key={artist.id}
+                type="artist"
+                id={artist.id}
                 album={{
                   name: artist.name,
                   artist: artist.name,

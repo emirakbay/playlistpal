@@ -3,7 +3,7 @@
 import React from "react";
 import { useScroll } from "~/hooks/use-scroll";
 import { type Track } from "~/types/spotify-types";
-import { FeaturedSlider } from "../album-artwork";
+import { FeaturedSlider } from "../featured-slider";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function GetRecommendations(recommendedTracks: {
@@ -25,6 +25,8 @@ export default function GetRecommendations(recommendedTracks: {
                 ?.filter((album) => album !== null)
                 .map((album: Track, index: number) => (
                   <FeaturedSlider
+                    type="track"
+                    id={album.id}
                     key={index}
                     album={{
                       name: album.name,

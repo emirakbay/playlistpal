@@ -154,3 +154,15 @@ export const fetchLikedPlaylists = async (session: Session) => {
 
   return likedPlaylists;
 };
+
+export const fetchTrack = async (id: string, session: Session) => {
+  const res = await fetch(`https://api.spotify.com/v1/tracks/${id}`, {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+
+  const data = (await res.json()) as Track;
+
+  return data;
+};

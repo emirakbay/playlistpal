@@ -3,7 +3,7 @@
 import React from "react";
 import { useScroll } from "~/hooks/use-scroll";
 import { type Playlist, type SimplifiedPlaylist } from "~/types/spotify-types";
-import { FeaturedSlider } from "../album-artwork";
+import { FeaturedSlider } from "../featured-slider";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function DisplayPlaylists({
@@ -16,10 +16,9 @@ export default function DisplayPlaylists({
   const { isScrolling, setIsScrolling } = useScroll();
 
   const uniqueItems = items
-    .filter((item): item is (Playlist | SimplifiedPlaylist) => item != null)
+    .filter((item): item is Playlist | SimplifiedPlaylist => item != null)
     .filter(
-      (item, index, self) => 
-        index === self.findIndex((t) => t?.id === item.id)
+      (item, index, self) => index === self.findIndex((t) => t?.id === item.id),
     );
 
   return (
@@ -36,6 +35,8 @@ export default function DisplayPlaylists({
             {uniqueItems.map(
               (playlist: Playlist | SimplifiedPlaylist, index: number) => (
                 <FeaturedSlider
+                  isScrolling={isScrolling}
+                  type="playlist"
                   album={{
                     name: playlist.name,
                     artist: playlist.owner.display_name,
@@ -50,7 +51,7 @@ export default function DisplayPlaylists({
                   externalUrl={playlist.external_urls.spotify}
                   uri={playlist.uri}
                   displayArtist={true}
-                  isScrolling={isScrolling}
+                  id={playlist.id}
                 />
               ),
             )}

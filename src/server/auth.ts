@@ -5,6 +5,7 @@ import {
 } from "next-auth";
 import { type JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
+import { getGeniusAccessToken } from "~/app/api/genius-service";
 
 import { env } from "~/env";
 
@@ -22,6 +23,7 @@ declare module "next-auth" {
       // role: UserRole;
     } & DefaultSession["user"];
     accessToken: string;
+    geniusAccessToken?: string;
     error?: "RefreshAccessTokenError";
   }
 }
@@ -31,6 +33,8 @@ declare module "next-auth/jwt" {
     accessToken: string;
     refreshToken: string;
     accessTokenExpires: number;
+    geniusAccessToken?: string;
+    geniusAccessTokenExpires?: number;
     error?: "RefreshAccessTokenError";
   }
 }
@@ -50,6 +54,24 @@ export const authOptions: NextAuthOptions = {
         token.accessTokenExpires = account.expires_at! * 1000;
       }
 
+      console.log("token", token);
+      // Check if Genius token exists and is valid
+      if (
+        !token.geniusAccessToken ||
+        Date.now() >= (token.geniusAccessTokenExpires ?? 0)
+      ) {
+        console.log("geniusAccessToken is invalid, getting new one");
+        try {
+          const geniusToken = await getGeniusAccessToken();
+          console.log("geniusToken", geniusToken);
+          token.geniusAccessToken = geniusToken;
+          token.geniusAccessTokenExpires = Date.now() + 3600 * 1000; // 1 hour expiry
+          console.log("geniusAccessToken is valid, returning token");
+        } catch (error) {
+          console.error("Error getting Genius token:", error);
+        }
+      }
+
       // Return previous token if the access token has not expired yet
       if (Date.now() < token.accessTokenExpires) {
         return token;
@@ -61,6 +83,7 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, token }) => {
       if (token) {
         session.accessToken = token.accessToken;
+        session.geniusAccessToken = token.geniusAccessToken;
         session.error = token.error;
         session.user.id = token.sub!;
       }
