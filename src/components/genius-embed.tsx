@@ -7,6 +7,7 @@ interface GeniusEmbedProps {
 }
 
 export default function GeniusEmbed({ embedContent }: GeniusEmbedProps) {
+  console.log(embedContent);
   const [lyrics, setLyrics] = useState<string[]>([]);
 
   useEffect(() => {
@@ -14,72 +15,126 @@ export default function GeniusEmbed({ embedContent }: GeniusEmbedProps) {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = embedContent;
 
-    // Find all divs with data-lyrics-container attribute
+    // Find ALL lyrics containers, not just the first one
     const lyricsContainers = tempDiv.querySelectorAll(
       '[data-lyrics-container="true"]',
     );
 
-    // Extract text content from each container while preserving structure
-    const extractedLyrics = Array.from(lyricsContainers)
-      .map((container) => {
-        // Remove any script tags and other unwanted elements
-        const cleanContainer = container.cloneNode(true) as HTMLElement;
-        const scripts = cleanContainer.getElementsByTagName("script");
-        Array.from(scripts).forEach((script) => script.remove());
+    if (!lyricsContainers || lyricsContainers.length === 0) {
+      setLyrics([]);
+      return;
+    }
 
-        // Function to recursively extract text from nodes
-        const extractText = (node: Node): string[] => {
-          const lines: string[] = [];
+    // Extract all text content
+    let lines: string[] = [];
+    let currentLine = "";
 
-          // Handle text nodes
-          if (node.nodeType === Node.TEXT_NODE) {
-            const text = node.textContent?.trim() ?? "";
-            if (text) {
-              lines.push(text);
-            }
+    const processNode = (node: Node) => {
+      // Skip unwanted containers entirely
+      if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        ((node as HTMLElement).classList.contains("LyricsHeader__Container") ||
+          (node as HTMLElement).classList.contains("PrimisPlayer__Container") ||
+          (node as HTMLElement).classList.contains(
+            "InreadContainer__Container-sc-b078f8b1-0",
+          ) ||
+          (node as HTMLElement).tagName.toLowerCase() === "script")
+      ) {
+        return;
+      }
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const textContent = node.textContent?.trim() ?? "";
+        if (textContent) {
+          currentLine += textContent;
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as HTMLElement;
+        const tagName = element.tagName.toLowerCase();
+
+        if (tagName === "br") {
+          // Process line break
+          if (currentLine) {
+            lines.push(currentLine);
+            currentLine = "";
+          } else if (lines.length > 0) {
+            // Empty line for double breaks
+            lines.push("");
           }
-          // Handle element nodes
-          else if (node.nodeType === Node.ELEMENT_NODE) {
-            const element = node as HTMLElement;
-
-            // Skip unwanted elements
-            if (element.tagName === "SCRIPT" || element.tagName === "STYLE") {
-              return lines;
-            }
-
-            // Check if this element should force a line break
-            const shouldBreak =
-              element.tagName === "BR" ||
-              element.tagName === "P" ||
-              element.tagName === "DIV";
-
-            // Process child nodes
-            Array.from(element.childNodes).forEach((child) => {
-              const childLines = extractText(child);
-              lines.push(...childLines);
-            });
-
-            // Add line break if needed
-            if (shouldBreak && lines.length > 0) {
-              lines.push("");
-            }
+        } else if (tagName === "i") {
+          // Add italic text without additional parentheses
+          const italicText = element.textContent?.trim() ?? "";
+          if (italicText) {
+            currentLine += italicText;
+          }
+        } else if (tagName === "a") {
+          // Handle links (may contain spans)
+          const span = element.querySelector("span");
+          const linkText =
+            span?.textContent?.trim() ?? element.textContent?.trim() ?? "";
+          if (linkText) {
+            currentLine += linkText;
+          }
+        } else if (tagName === "div") {
+          // For divs, first finish current line if we have content
+          if (currentLine) {
+            lines.push(currentLine);
+            currentLine = "";
           }
 
-          return lines;
-        };
+          // Process all children
+          for (const child of Array.from(element.childNodes)) {
+            processNode(child);
+          }
 
-        // Extract text from the container
-        const lines = extractText(cleanContainer);
+          // Ensure we have a line break after div if needed
+          if (currentLine) {
+            lines.push(currentLine);
+            currentLine = "";
+          }
+        } else {
+          // For all other elements, just process their children
+          for (const child of Array.from(element.childNodes)) {
+            processNode(child);
+          }
+        }
+      }
+    };
 
-        // Join lines with newlines and clean up multiple empty lines
-        return lines
-          .join("\n")
-          .replace(/\n{3,}/g, "\n\n") // Replace 3+ newlines with 2
-          .trim();
-      })
-      .filter((text) => text.length > 0);
+    // Process all lyrics containers found
+    lyricsContainers.forEach((container) => {
+      // Process all direct children of lyrics container
+      for (const child of Array.from(container.childNodes)) {
+        processNode(child);
+      }
 
-    setLyrics(extractedLyrics);
+      // Add a separator between different lyrics containers if we have multiple
+      if (lyricsContainers.length > 1 && currentLine) {
+        lines.push(currentLine);
+        currentLine = "";
+        lines.push("---"); // Optional separator between different lyric sections
+      }
+    });
+
+    // Add any remaining content
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    // Clean up lines
+    lines = lines
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+      .map((line) => {
+        return line
+          .replace(/\s+/g, " ") // Replace multiple spaces with single space
+          .replace(/\[\s+/g, "[") // Clean up spaces after opening brackets
+          .replace(/\s+\]/g, "]") // Clean up spaces before closing brackets
+          .replace(/\(\s+/g, "(") // Clean up spaces after opening parentheses
+          .replace(/\s+\)/g, ")"); // Clean up spaces before closing parentheses
+      });
+
+    setLyrics(lines);
   }, [embedContent]);
 
   if (lyrics.length === 0) {
@@ -90,38 +145,48 @@ export default function GeniusEmbed({ embedContent }: GeniusEmbedProps) {
     );
   }
 
+  console.log(lyrics);
   return (
     <div className="mx-auto my-4 w-full max-w-2xl">
       <div className="rounded-lg bg-white p-6 shadow-lg">
-        {lyrics.map((verse, index) => (
-          <div
-            key={index}
-            className="mb-4 whitespace-pre-line text-gray-800"
-            data-lyrics-container="true"
-          >
-            {verse.split("\n").map((line, lineIndex) => {
-              // Check if line is a section header (e.g., [Verse 1])
-              const isHeader = line.startsWith("[") && line.endsWith("]");
-              // Check if line is a contributor note
-              const isContributor = line.startsWith("(") && line.endsWith(")");
+        <div className="flex flex-col space-y-1">
+          {lyrics.map((line, index) => {
+            const isHeader = line.startsWith("[") && line.endsWith("]");
+            const isContributor = line.startsWith("(") && line.endsWith(")");
+            const isSeparator = line === "---";
+            const isTitle = line.includes("için şarkı sözleri");
 
-              return (
-                <p
-                  key={lineIndex}
-                  className={`mb-1 ${
-                    isHeader
-                      ? "font-bold text-blue-600"
-                      : isContributor
-                        ? "italic text-gray-500"
-                        : ""
-                  }`}
-                >
-                  {line}
-                </p>
-              );
-            })}
-          </div>
-        ))}
+            return (
+              <div
+                key={index}
+                className={`
+                  ${isTitle ? "mb-6" : ""}
+                  ${isHeader ? "mb-3 mt-6" : ""}
+                  ${isContributor ? "mb-2" : ""}
+                  ${isSeparator ? "my-6 border-t border-gray-300" : ""}
+                `}
+              >
+                {!isSeparator ? (
+                  <p
+                    className={`
+                      ${
+                        isTitle
+                          ? "text-center text-xl font-bold text-black"
+                          : isHeader
+                            ? "font-bold text-blue-600"
+                            : isContributor
+                              ? "text-sm italic text-gray-600"
+                              : "text-black"
+                      }
+                    `}
+                  >
+                    {line}
+                  </p>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
