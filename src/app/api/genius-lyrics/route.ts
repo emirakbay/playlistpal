@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       ],
       defaultViewport: { width: 1200, height: 800 },
       executablePath:
-        process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
+        process.env.CHROME_EXECUTABLE_PATH ?? (await chromium.executablePath()),
       headless: chromium.headless,
     });
 
@@ -48,9 +48,9 @@ export async function GET(request: Request) {
       page.on("request", (request) => {
         const resourceType = request.resourceType();
         if (["image", "stylesheet", "font", "media"].includes(resourceType)) {
-          request.abort();
+          void request.abort();
         } else {
-          request.continue();
+          void request.continue();
         }
       });
 
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
             clone.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
 
             // Get the text content preserving line breaks
-            const text = clone.textContent || "";
+            const text = clone.textContent ?? "";
 
             // Split into lines and clean each line
             return text
