@@ -40,8 +40,12 @@ export default async function TrackPage({
   let lyricsHtml = null;
   if (matchingTrack) {
     try {
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+
       const lyricsResponse = await fetch(
-        `${process.env.NEXTAUTH_URL}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`,
+        `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`,
         {
           cache: "no-store",
         },
