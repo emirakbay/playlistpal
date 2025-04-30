@@ -25,9 +25,10 @@ export async function GET(request: Request) {
         "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
       ],
       defaultViewport: { width: 1200, height: 800 },
-      executablePath:
-        process.env.CHROME_EXECUTABLE_PATH ?? (await chromium.executablePath()),
-      headless: chromium.headless,
+      executablePath: isLocal
+        ? process.env.CHROME_EXECUTABLE_PATH
+        : await chromium.executablePath(),
+      headless: true,
     });
 
     try {
