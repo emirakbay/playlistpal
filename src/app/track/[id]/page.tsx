@@ -40,16 +40,16 @@ export default async function TrackPage({
   let lyricsHtml = null;
   if (matchingTrack) {
     try {
-      const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+      const isProd = process.env.NODE_ENV === "production";
+      const baseUrl = isProd
+        ? `${process.env.VERCEL_URL}`
+        : "http://localhost:3000";
 
-      const lyricsResponse = await fetch(
-        `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`,
-        {
-          cache: "no-store",
-        },
-      );
+      const url = `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`;
+      console.log("Fetching lyrics from:", url);
+      const lyricsResponse = await fetch(url, {
+        cache: "no-store",
+      });
       const data = await lyricsResponse.json();
       lyricsHtml = data.html;
     } catch (error) {
