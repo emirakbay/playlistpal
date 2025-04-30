@@ -42,11 +42,10 @@ export default async function TrackPage({
     try {
       const isProd = process.env.NODE_ENV === "production";
       const baseUrl = isProd
-        ? `${process.env.VERCEL_URL}`
+        ? `${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
         : "http://localhost:3000";
 
       const url = `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`;
-      console.log("Fetching lyrics from:", url);
       const lyricsResponse = await fetch(url, {
         cache: "no-store",
       });

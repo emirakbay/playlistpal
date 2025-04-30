@@ -34,7 +34,6 @@ export const env = createEnv({
     GENIUS_CLIENT_ID: z.string(),
     GENIUS_CLIENT_SECRET: z.string(),
     GENIUS_ACCESS_TOKEN: z.string(),
-    VERCEL_URL: z.string(),
   },
 
   /**
@@ -68,7 +67,6 @@ export const env = createEnv({
     GENIUS_CLIENT_ID: process.env.GENIUS_CLIENT_ID,
     GENIUS_CLIENT_SECRET: process.env.GENIUS_CLIENT_SECRET,
     GENIUS_ACCESS_TOKEN: process.env.GENIUS_ACCESS_TOKEN,
-    VERCEL_URL: process.env.VERCEL_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
