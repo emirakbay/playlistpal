@@ -40,8 +40,18 @@ export default async function TrackPage({
   let lyricsHtml = null;
   if (matchingTrack) {
     try {
-      const lyricsResponse = await fetch(matchingTrack.url);
-      lyricsHtml = await lyricsResponse.text();
+      const isProd = process.env.NODE_ENV === "production";
+      const baseUrl = isProd
+        ? `${process.env.VERCEL_URL}`
+        : "http://localhost:3000";
+
+      const url = `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`;
+      console.log("Fetching lyrics from:", url);
+      const lyricsResponse = await fetch(url, {
+        cache: "no-store",
+      });
+      const data = await lyricsResponse.json();
+      lyricsHtml = data.html;
     } catch (error) {
       console.error("Failed to fetch lyrics:", error);
     }

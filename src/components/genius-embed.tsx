@@ -14,133 +14,11 @@ export default function GeniusEmbed({ embedContent }: GeniusEmbedProps) {
   useEffect(() => {
     const processLyrics = () => {
       try {
-        // Create a temporary div to parse the HTML
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = embedContent;
-
-        // Find ALL lyrics containers, not just the first one
-        const lyricsContainers = tempDiv.querySelectorAll(
-          '[data-lyrics-container="true"]',
-        );
-
-        if (!lyricsContainers || lyricsContainers.length === 0) {
-          setLyrics([]);
-          setIsLoading(false);
-          return;
-        }
-
-        // Extract all text content
-        let lines: string[] = [];
-        let currentLine = "";
-
-        const processNode = (node: Node) => {
-          // Skip unwanted containers entirely
-          if (
-            node.nodeType === Node.ELEMENT_NODE &&
-            ((node as HTMLElement).classList.contains(
-              "LyricsHeader__Container",
-            ) ||
-              (node as HTMLElement).classList.contains(
-                "PrimisPlayer__Container",
-              ) ||
-              (node as HTMLElement).classList.contains(
-                "InreadContainer__Container-sc-b078f8b1-0",
-              ) ||
-              (node as HTMLElement).tagName.toLowerCase() === "script")
-          ) {
-            return;
-          }
-
-          if (node.nodeType === Node.TEXT_NODE) {
-            const textContent = node.textContent?.trim() ?? "";
-            if (textContent) {
-              currentLine += textContent;
-            }
-          } else if (node.nodeType === Node.ELEMENT_NODE) {
-            const element = node as HTMLElement;
-            const tagName = element.tagName.toLowerCase();
-
-            if (tagName === "br") {
-              // Process line break
-              if (currentLine) {
-                lines.push(currentLine);
-                currentLine = "";
-              } else if (lines.length > 0) {
-                // Empty line for double breaks
-                lines.push("");
-              }
-            } else if (tagName === "i") {
-              // Add italic text without additional parentheses
-              const italicText = element.textContent?.trim() ?? "";
-              if (italicText) {
-                currentLine += italicText;
-              }
-            } else if (tagName === "a") {
-              // Handle links (may contain spans)
-              const span = element.querySelector("span");
-              const linkText =
-                span?.textContent?.trim() ?? element.textContent?.trim() ?? "";
-              if (linkText) {
-                currentLine += linkText;
-              }
-            } else if (tagName === "div") {
-              // For divs, first finish current line if we have content
-              if (currentLine) {
-                lines.push(currentLine);
-                currentLine = "";
-              }
-
-              // Process all children
-              for (const child of Array.from(element.childNodes)) {
-                processNode(child);
-              }
-
-              // Ensure we have a line break after div if needed
-              if (currentLine) {
-                lines.push(currentLine);
-                currentLine = "";
-              }
-            } else {
-              // For all other elements, just process their children
-              for (const child of Array.from(element.childNodes)) {
-                processNode(child);
-              }
-            }
-          }
-        };
-
-        // Process all lyrics containers found
-        lyricsContainers.forEach((container) => {
-          // Process all direct children of lyrics container
-          for (const child of Array.from(container.childNodes)) {
-            processNode(child);
-          }
-
-          // Add a separator between different lyrics containers if we have multiple
-          if (lyricsContainers.length > 1 && currentLine) {
-            lines.push(currentLine);
-            currentLine = "";
-            lines.push("---"); // Optional separator between different lyric sections
-          }
-        });
-
-        // Add any remaining content
-        if (currentLine) {
-          lines.push(currentLine);
-        }
-
-        // Clean up lines
-        lines = lines
+        // Split content by line breaks and clean up
+        const lines = embedContent
+          .split("\n")
           .map((line) => line.trim())
-          .filter((line) => line.length > 0)
-          .map((line) => {
-            return line
-              .replace(/\s+/g, " ") // Replace multiple spaces with single space
-              .replace(/\[\s+/g, "[") // Clean up spaces after opening brackets
-              .replace(/\s+\]/g, "]") // Clean up spaces before closing brackets
-              .replace(/\(\s+/g, "(") // Clean up spaces after opening parentheses
-              .replace(/\s+\)/g, ")"); // Clean up spaces before closing parentheses
-          });
+          .filter((line) => line.length > 0);
 
         setLyrics(lines);
       } catch (err) {
@@ -151,8 +29,7 @@ export default function GeniusEmbed({ embedContent }: GeniusEmbedProps) {
       }
     };
 
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(processLyrics);
+    processLyrics();
   }, [embedContent]);
 
   if (isLoading) {
@@ -182,40 +59,43 @@ export default function GeniusEmbed({ embedContent }: GeniusEmbedProps) {
   return (
     <div className="mx-auto my-4 w-full max-w-2xl">
       <div className="rounded-lg bg-white p-6 shadow-lg">
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col space-y-2">
           {lyrics.map((line, index) => {
+            // Detect line types
             const isHeader = line.startsWith("[") && line.endsWith("]");
             const isContributor = line.startsWith("(") && line.endsWith(")");
-            const isSeparator = line === "---";
             const isTitle = line.includes("için şarkı sözleri");
+            const isEmptyLine = line.trim().length === 0;
+
+            if (isEmptyLine) {
+              return <div key={index} className="h-4" />;
+            }
 
             return (
               <div
                 key={index}
                 className={`
                   ${isTitle ? "mb-6" : ""}
-                  ${isHeader ? "mb-3 mt-6" : ""}
+                  ${isHeader ? "mb-2 mt-4" : ""}
                   ${isContributor ? "mb-2" : ""}
-                  ${isSeparator ? "my-6 border-t border-gray-300" : ""}
                 `}
               >
-                {!isSeparator ? (
-                  <p
-                    className={`
-                      ${
-                        isTitle
-                          ? "text-center text-xl font-bold text-black"
-                          : isHeader
-                            ? "font-bold text-blue-600"
-                            : isContributor
-                              ? "text-sm italic text-gray-600"
-                              : "text-black"
-                      }
-                    `}
-                  >
-                    {line}
-                  </p>
-                ) : null}
+                <p
+                  className={`
+                    ${
+                      isTitle
+                        ? "text-center text-xl font-bold text-black"
+                        : isHeader
+                          ? "font-bold text-blue-600"
+                          : isContributor
+                            ? "text-sm italic text-gray-600"
+                            : "text-black"
+                    }
+                    ${!isTitle && !isHeader ? "leading-relaxed" : ""}
+                  `}
+                >
+                  {line}
+                </p>
               </div>
             );
           })}
