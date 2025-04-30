@@ -42,7 +42,7 @@ export default async function TrackPage({
     try {
       const isProd = process.env.NODE_ENV === "production";
       const baseUrl = isProd
-        ? `${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
         : "http://localhost:3000";
 
       const url = `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`;
