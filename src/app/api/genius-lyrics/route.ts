@@ -62,9 +62,9 @@ export async function GET(request: Request) {
         timeout: 30000,
       });
 
-      // Wait for lyrics container with shorter timeout
+      // Wait for lyrics container with longer timeout
       await page.waitForSelector('[data-lyrics-container="true"]', {
-        timeout: 10000,
+        timeout: 20000,
       });
 
       const lyricsHtml = await page.evaluate(() => {
@@ -114,9 +114,27 @@ export async function GET(request: Request) {
         html: lyricsHtml,
         url: url,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       await browser.close();
-      throw error;
+      // Type guard for error with message and stack
+      function hasMessageAndStack(e: unknown): e is { message: string; stack?: string } {
+        return (
+          typeof e === 'object' &&
+          e !== null &&
+          'message' in e &&
+          typeof (e as { message: unknown }).message === 'string'
+        );
+      }
+      let message = 'Unknown error';
+      let stack = undefined;
+      if (hasMessageAndStack(error)) {
+        message = error.message;
+        stack = error.stack;
+      }
+      return Response.json(
+        { error: message, stack },
+        { status: 500 },
+      );
     }
   } catch (error) {
     console.error("Error extracting lyrics:", error);
