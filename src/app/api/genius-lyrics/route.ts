@@ -27,7 +27,9 @@ export async function GET(request: Request) {
       defaultViewport: { width: 1200, height: 800 },
       executablePath: isLocal
         ? process.env.CHROME_EXECUTABLE_PATH
-        : await chromium.executablePath(),
+        : await chromium.executablePath(
+            "https://playlistpal.s3.eu-north-1.amazonaws.com/chromium-v126.0.0-pack.tar",
+          ),
       headless: true,
     });
 
