@@ -49,8 +49,18 @@ export default async function TrackPage({
       const lyricsResponse = await fetch(url, {
         cache: "no-store",
       });
-      const data = await lyricsResponse.json();
-      lyricsHtml = data.html;
+      if (!lyricsResponse.ok) {
+        const errorText = await lyricsResponse.text();
+        console.error("Failed to fetch lyrics (not ok):", errorText);
+      } else {
+        try {
+          const data = await lyricsResponse.json();
+          lyricsHtml = data.html;
+        } catch (jsonError) {
+          const errorText = await lyricsResponse.text();
+          console.error("Failed to parse lyrics JSON:", errorText);
+        }
+      }
     } catch (error) {
       console.error("Failed to fetch lyrics:", error);
     }
