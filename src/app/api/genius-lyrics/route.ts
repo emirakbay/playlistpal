@@ -24,13 +24,13 @@ export async function GET(request: Request) {
         "--disable-features=IsolateOrigins,site-per-process",
         "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
       ],
-      defaultViewport: { width: 1200, height: 800 },
+      defaultViewport: chromium.defaultViewport,
       executablePath: isLocal
         ? process.env.CHROME_EXECUTABLE_PATH
         : await chromium.executablePath(
             "https://playlistpal.s3.eu-north-1.amazonaws.com/chromium-v126.0.0-pack.tar",
           ),
-      headless: true,
+      headless: isLocal ? true : chromium.headless,
     });
 
     try {
@@ -117,24 +117,23 @@ export async function GET(request: Request) {
     } catch (error: unknown) {
       await browser.close();
       // Type guard for error with message and stack
-      function hasMessageAndStack(e: unknown): e is { message: string; stack?: string } {
+      function hasMessageAndStack(
+        e: unknown,
+      ): e is { message: string; stack?: string } {
         return (
-          typeof e === 'object' &&
+          typeof e === "object" &&
           e !== null &&
-          'message' in e &&
-          typeof (e as { message: unknown }).message === 'string'
+          "message" in e &&
+          typeof (e as { message: unknown }).message === "string"
         );
       }
-      let message = 'Unknown error';
+      let message = "Unknown error";
       let stack = undefined;
       if (hasMessageAndStack(error)) {
         message = error.message;
         stack = error.stack;
       }
-      return Response.json(
-        { error: message, stack },
-        { status: 500 },
-      );
+      return Response.json({ error: message, stack }, { status: 500 });
     }
   } catch (error) {
     console.error("Error extracting lyrics:", error);
