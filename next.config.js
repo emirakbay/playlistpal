@@ -19,6 +19,12 @@ const config = {
     ],
     unoptimized: true,
   },
+  experimental: {
+    serverComponentsExternalPackages: [
+      "puppeteer-core",
+      "@sparticuz/chromium-min",
+    ],
+  }
 };
 
 export default config;
