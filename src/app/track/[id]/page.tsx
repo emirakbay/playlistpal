@@ -3,7 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { findMatchingTrack, searchGenius } from "~/app/api/genius-service";
 import { fetchTrack } from "~/app/api/spotify-service";
-import GeniusEmbed from "~/components/genius-embed";
+import LyricsSection from "~/components/lyrics-section";
 import { authOptions } from "~/server/auth";
 
 export default async function TrackPage({
@@ -36,37 +36,6 @@ export default async function TrackPage({
     track.name,
     track.artists.map((artist) => artist.name),
   );
-
-  let lyricsHtml = null;
-  if (matchingTrack) {
-    try {
-      const isProd = process.env.NODE_ENV === "production";
-      const baseUrl = isProd
-        ? process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.NEXTAUTH_URL ?? "https://playlistpal.vercel.app"
-        : "http://localhost:3000";
-
-      const url = `${baseUrl}/api/genius-lyrics?url=${encodeURIComponent(matchingTrack.url)}`;
-      const lyricsResponse = await fetch(url, {
-        cache: "no-store",
-      });
-      if (!lyricsResponse.ok) {
-        const errorText = await lyricsResponse.text();
-        console.error("Failed to fetch lyrics (not ok):", errorText);
-      } else {
-        try {
-          const data = await lyricsResponse.json();
-          lyricsHtml = data.html;
-        } catch (jsonError) {
-          const errorText = await lyricsResponse.text();
-          console.error("Failed to parse lyrics JSON:", errorText);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch lyrics:", error);
-    }
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -155,18 +124,7 @@ export default async function TrackPage({
         </div>
 
         {/* Lyrics Section */}
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold">Lyrics</h2>
-          {lyricsHtml ? (
-            <GeniusEmbed embedContent={lyricsHtml} />
-          ) : (
-            <div className="rounded-lg bg-gray-50 p-6 text-center">
-              <p className="text-gray-500">
-                No lyrics available for this track
-              </p>
-            </div>
-          )}
-        </div>
+        <LyricsSection matchingTrack={matchingTrack} />
       </div>
     </div>
   );
